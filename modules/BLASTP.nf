@@ -48,7 +48,7 @@ process BLASTP_ALL {
     container 'ncbi/blast:2.16.0'
 
     input:
-        tuple file(fa)
+        file(fa)
 
     output:
        path("all_prots_vs_all_prots.blast"), emit: result
