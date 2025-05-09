@@ -18,7 +18,7 @@ process MCSCANX {
     MCScanX combined_input \
         -b ${params.block_pattern} \
         -s ${params.match_size} \
-        -e ${params.e_value} \
+        -e ${params.mcscanx_e_value} \
         -k ${params.match_score} \
         -g ${params.gap_penalty} \
         -m ${params.max_gaps} \
