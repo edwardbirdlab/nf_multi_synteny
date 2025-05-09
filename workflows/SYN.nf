@@ -4,7 +4,7 @@ Importing subworkflows
 ~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { SYN_SN as SYN_SN } from '../subworkflows/SYN_SN.nf'
+include { SYN_SW as SYN_SW } from '../subworkflows/SYN_SW.nf'
 
 
 workflow SYN {
@@ -13,7 +13,7 @@ workflow SYN {
         genomes    //    channel: [ val(short_name), fasta, gff]
 
     main:
-        SYN_SN(genomes)
+        SYN_SW(genomes)
 
 
 }
