@@ -53,7 +53,7 @@ workflow SYN_SW {
         //Blast proteins
 
         //Create pariwise protein set
-        protein_ch = AGAT_PROT.out.prots_only.collect()
+        protein_ch = AGAT_PROT.out.prots_only
 
         pairwise_ch = protein_ch
             .toList()
@@ -72,6 +72,8 @@ workflow SYN_SW {
             }
             .flatten()
             .buffer(size: 3)
+
+        protein_ch.view()
 
         //Running pairwise blasts
         DIAMOND_ALL(pairwise_ch)
