@@ -6,7 +6,7 @@ process AGAT_STD {
         tuple val(id), file(fa), file(gff)
 
     output:
-	   tuple val(id), file(fa), file("${id}_annot_std.gff3"), emit: gff
+	   tuple val(id), path(${fa}), path("${id}_annot_std.gff3"), emit: gff
 
 
     script:
@@ -24,8 +24,8 @@ process AGAT_PROT {
         tuple val(id), file(fa), file(gff)
 
     output:
-       tuple val(id), file("${id}_proteins.fasta"), emit: prots
-       file("${id}_proteins.fasta"), emit: prots_only
+       tuple val(id), path("${id}_proteins.fasta"), emit: prots
+       path("${id}_proteins.fasta"), emit: prots_only
 
 
     script:
@@ -49,8 +49,8 @@ process AGAT_GFF2BED {
         tuple val(id), file(fa), file(gff)
 
     output:
-       tuple val(id), file(fa), file("${id}_annot.bed"), emit: bed
-       file("${id}_annot.bed"), emit: bed_only
+       tuple val(id), path(${fa}), path("${id}_annot.bed"), emit: bed
+       path("${id}_annot.bed"), emit: bed_only
 
 
     script:

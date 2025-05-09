@@ -6,7 +6,7 @@ process FASTA_FILT {
         tuple val(id), file(fa), file(gff)
 
     output:
-	   tuple val(id), file("filt_${fa}"), file(gff), emit: filt_fasta
+	   tuple val(id), path("filt_${fa}"), path(gff), emit: filt_fasta
 
 
     script:
@@ -23,7 +23,7 @@ process RENAME_CHR {
         tuple val(id), file(fa), file(gff)
 
     output:
-       tuple val(id), file("${id}_genome.fasta"), file("${id}_annot.gff3"), emit: remap
+       tuple val(id), path("${id}_genome.fasta"), path("${id}_annot.gff3"), emit: remap
 
 
     script:
@@ -42,7 +42,7 @@ process COMBINE_BED {
         file(gffs)
 
     output:
-       file(combined_format.bed), emit: combo_bed
+       path(combined_format.bed), emit: combo_bed
 
 
     script:
