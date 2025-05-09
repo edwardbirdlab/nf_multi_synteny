@@ -42,7 +42,7 @@ process COMBINE_BED {
         file(gffs)
 
     output:
-       path(combined_format.bed), emit: combo_bed
+       path("combined_format.bed"), emit: combo_bed
 
 
     script:

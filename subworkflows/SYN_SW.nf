@@ -59,7 +59,7 @@ workflow SYN_SW {
         AGAT_GFF2BED(AGAT_STD.out.gff)
 
         //BED Combine
-        COMBINE_BED(AGAT_GFF2BED.out.bed_only)
+        COMBINE_BED(AGAT_GFF2BED.out.bed_only.collect())
 
 
         //Run McScanX
