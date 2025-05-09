@@ -73,15 +73,15 @@ workflow SYN_SW {
         //BUSCO
 
         //Get longest isoform prot seqs
-        AGAT_LONGEST_PROT(AGAT_STD.out.gff)
+        //AGAT_LONGEST_PROT(AGAT_STD.out.gff)
 
         //Get Busco DB
-        BUSCO_DB()
+        //BUSCO_DB()
 
         //Run Busco
-        BUSCO(AGAT_LONGEST_PROT.out.prots,BUSCO_DB.out.busco_db)
+        //BUSCO(AGAT_LONGEST_PROT.out.prots,BUSCO_DB.out.busco_db)
 
         //Running Quast
-        QUAST(input)
+        //QUAST(input)
 
 }
