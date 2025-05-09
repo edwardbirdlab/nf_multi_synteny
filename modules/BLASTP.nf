@@ -96,7 +96,7 @@ process DIAMOND_ALL {
       -q all_prots.fasta \
       -d all_prots_db \
       -e ${params.diamond_e_value} \
-      --max-target-seqs 5 \
+      --max-target-seqs 50 \
       --outfmt 6 \
       -o all_prots_vs_all_prots.blast \
       --threads ${task.cpus}
