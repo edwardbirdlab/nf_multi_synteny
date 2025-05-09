@@ -1,6 +1,6 @@
 process AGAT_STD {
     label 'low'
-	container 'ebird013/agat:latest'
+	container 'quay.io/biocontainers/agat:1.4.2--pl5321hdfd78af_0'
 
     input:
         tuple val(id), file(fa), file(gff)
@@ -18,7 +18,7 @@ process AGAT_STD {
 
 process AGAT_PROT {
     label 'low'
-    container 'ebird013/agat:latest'
+    container 'quay.io/biocontainers/agat:1.4.2--pl5321hdfd78af_0'
 
     input:
         tuple val(id), file(fa), file(gff)
@@ -43,7 +43,7 @@ process AGAT_PROT {
 
 process AGAT_GFF2BED {
     label 'low'
-    container 'ebird013/agat:latest'
+    container 'quay.io/biocontainers/agat:1.4.2--pl5321hdfd78af_0'
 
     input:
         tuple val(id), file(fa), file(gff)
