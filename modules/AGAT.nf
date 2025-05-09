@@ -12,7 +12,7 @@ process AGAT_STD {
     script:
 
     """
-    agat_convert_sp_gff2gff3.pl --gff ${gff} > ${id}_annot_std.gff3
+    agat_convert_sp_gxf2gxf.pl --gff ${gff} --output ${id}_annot_std.gff3
     """
 }
 
@@ -56,6 +56,6 @@ process AGAT_GFF2BED {
     script:
 
     """
-    agat_convert_gff2bed.pl --gff ${gff} --bed ${id}_annot.bed
+    agat_convert_sp_gff2bed.pl --gff ${gff} --out ${id}_annot.bed
     """
 }
