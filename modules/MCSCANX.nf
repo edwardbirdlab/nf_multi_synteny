@@ -7,7 +7,7 @@ process MCSCANX {
         file(gff)
 
     output:
-	   tuple val(id), path(fa), path("${id}_annot_std.gff3"), emit: gff
+	   path("*.html"), path("*.gff"), path("*.fasta"), path("*.collinearity"), emit: output
 
 
     script:
