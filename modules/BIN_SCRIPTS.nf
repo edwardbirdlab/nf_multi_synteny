@@ -24,14 +24,15 @@ process RENAME_CHR {
 
     output:
        tuple val(id), path("${id}_genome.fasta"), path("${id}_annot.gff3"), emit: remap
+       path("${id}_contig_map.tsv"), emit: map
 
 
     script:
 
     """
-    generate_contig_map.sh ${fa} contig_map.tsv ${id}
-    rename_fasta_headers.sh contig_map.tsv ${fa} ${id}_genome.fasta
-    rename_gff3_contigs.sh contig_map.tsv ${gff} ${id}_annot.gff3
+    generate_contig_map.sh ${fa} ${id}_contig_map.tsv ${id}
+    rename_fasta_headers.sh ${id}_contig_map.tsv ${fa} ${id}_genome.fasta
+    rename_gff3_contigs.sh ${id}_contig_map.tsv ${gff} ${id}_annot.gff3
     """
 }
 process COMBINE_BED {
