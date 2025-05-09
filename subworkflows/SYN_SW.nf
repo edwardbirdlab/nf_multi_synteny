@@ -53,22 +53,24 @@ workflow SYN_SW {
         //Blast proteins
 
         //Create pariwise protein set
-        protein_ch = AGAT_PROT.out.prots_only.map { file(it) }
+        protein_ch = AGAT_PROT.out.prots_only
         protein_ch.view{ "Input protein files: $it" }
 
         pairwise_ch = protein_ch
-            .toList()
+            .collect()
             .map { files ->
-                files.combinations(2).collect { f1, f2 -> 
+                files.combinations(2).withIndex().collect { pair, index ->
+                    def f1 = pair[0]
+                    def f2 = pair[1]
                     def id1 = f1.name.toString().tokenize('.')[0]
                     def id2 = f2.name.toString().tokenize('.')[0]
-                    tuple("${id1}_vs_${id2}", f1, f2)
+                    tuple("pair_${index + 1}", "${id1}_vs_${id2}", f1, f2)
                 }
             }
             .flatten()
-            .buffer(size: 3)
+            .buffer(size: 4)
 
-        pairwise_ch.view{ "Output protein matrix: $it" }
+        pairwise_ch.view{ "Pairwise combination: $it" }
 
         //Running pairwise blasts
         DIAMOND_ALL(pairwise_ch)
