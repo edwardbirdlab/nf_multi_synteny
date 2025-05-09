@@ -63,7 +63,7 @@ process BLASTP_ALL {
     mv prot_db* blast_db_nf
 
     blastp -query all_prots.fasta \
-       -db /blast_db_nf/prot_db \
+       -db blast_db_nf/prot_db \
        -out all_prots_vs_all_prots.blast \
        -evalue 1e-10 \
        -max_target_seqs 5 \
