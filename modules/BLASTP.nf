@@ -95,7 +95,7 @@ process DIAMOND_ALL {
     diamond blastp \
       -q all_prots.fasta \
       -d all_prots_db \
-      -e 1e-10 \
+      -e ${params.diamond_e_value} \
       --max-target-seqs 5 \
       --outfmt 6 \
       -o all_prots_vs_all_prots.blast \
