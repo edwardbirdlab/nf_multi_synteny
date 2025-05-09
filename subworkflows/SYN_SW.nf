@@ -73,6 +73,8 @@ workflow SYN_SW {
             .flatten()
             .buffer(size: 3)
 
+        pairwise_ch.view()
+        
         //Running pairwise blasts
         DIAMOND_ALL(pairwise_ch)
 
