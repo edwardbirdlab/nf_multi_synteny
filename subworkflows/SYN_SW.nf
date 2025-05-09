@@ -73,8 +73,6 @@ workflow SYN_SW {
             .flatten()
             .buffer(size: 3)
 
-        protein_ch.view()
-
         //Running pairwise blasts
         DIAMOND_ALL(pairwise_ch)
 
