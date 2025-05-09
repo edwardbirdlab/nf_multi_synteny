@@ -52,10 +52,34 @@ workflow SYN_SW {
 
         //Blast proteins
 
-        //Combe Protein Fasta & Self-Blast
-        DIAMOND_ALL(AGAT_PROT.out.prots_only.collect())
+        //Create pariwise protein set
+        protein_ch = AGAT_PROT.out.prots_only.collect()
 
-        
+        pairwise_ch = protein_ch
+            .toList()
+            .map { files ->
+                files
+                    .collectMany { f1 -> 
+                        files.collect { f2 -> tuple(f1, f2) }
+                    }
+            }
+            .flatten()
+            .toList()
+            .map { pairs -> 
+                pairs.withIndex().collect { pair, index ->
+                    tuple("s${index + 1}", pair[0], pair[1])
+                }
+            }
+            .flatten()
+            .buffer(size: 3)
+
+        //Running pairwise blasts
+        DIAMOND_ALL(pairwise_ch)
+
+        //Collect all blasts
+        ch_concatenated_blast = DIAMOND_ALL.out.result
+            .collectFile(name: 'all_blast_results.txt', newLine: true)
+            .view { file -> "All BLAST results concatenated into: ${file.name}" }
 
         //Combine GFFs into BED
 
@@ -67,7 +91,7 @@ workflow SYN_SW {
 
 
         //Run McScanX
-        MCSCANX(DIAMOND_ALL.out.result, COMBINE_BED.out.combo_bed)
+        MCSCANX(ch_concatenated_blast, COMBINE_BED.out.combo_bed)
 
 
         //BUSCO

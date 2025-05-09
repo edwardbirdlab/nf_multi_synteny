@@ -77,28 +77,24 @@ process DIAMOND_ALL {
     container 'buchfink/diamond:version2.1.11'
 
     input:
-        file(fa)
+        tuple val(id), file(fa1), file(fa2)
 
     output:
-       path("all_prots_vs_all_prots.blast"), emit: result
+       path("${id}.blast"), emit: result
 
 
     script:
 
     """
-    mkdir blast_db_nf
-
-    cat ${fa} > all_prots.fasta
-
-    diamond makedb --in all_prots.fasta -d all_prots_db
+    diamond makedb --in ${fa2} -d prots_db
 
     diamond blastp \
-      -q all_prots.fasta \
-      -d all_prots_db \
+      -q ${fa1} \
+      -d prots_db \
       -e ${params.diamond_e_value} \
-      --max-target-seqs 50 \
+      --max-target-seqs 5 \
       --outfmt 6 \
-      -o all_prots_vs_all_prots.blast \
+      -o ${id}.blast \
       --threads ${task.cpus}
     """
 }
