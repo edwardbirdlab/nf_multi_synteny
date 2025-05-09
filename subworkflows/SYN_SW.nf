@@ -58,8 +58,9 @@ workflow SYN_SW {
 
         pairwise_ch = protein_ch
             .toList()
-            .map { files ->
-                def labeled = files.indexed().collect { idx, f -> tuple("S${idx+1}", f) }
+            .collectMany { files ->
+                def labeled = files.indexed().collect { idx, f -> tuple("S${idx + 1}", f) }
+
                 labeled.collectMany { t1 ->
                     labeled.collect { t2 ->
                         def label = "${t1[0]}_vs_${t2[0]}"
