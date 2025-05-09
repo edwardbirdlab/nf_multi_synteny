@@ -67,6 +67,7 @@ workflow SYN_SW {
                     }
                 }
             }
+            .filter { id, f1, f2 -> f1 != f2 }
 
         pairwise_ch.view{ "Pairwise combination: $it" }
 
