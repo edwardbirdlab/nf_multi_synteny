@@ -22,6 +22,6 @@ process MCSCANX {
         -k ${params.match_score} \
         -g ${params.gap_penalty} \
         -m ${params.max_gaps} \
-        -u ${params.aerage_intergenic_dis}
+        -w ${params.window_overlap}
     """
 }
