@@ -78,7 +78,7 @@ workflow SYN_SW {
 
         //Collect all blasts
         ch_concatenated_blast = DIAMOND_ALL.out.result
-            .collectFile(name: 'all_blast_results.txt', newLine: true)
+            .collectFile(name: 'all_blast_results.txt')
             .view { file -> "All BLAST results concatenated into: ${file.name}" }
 
         //Combine GFFs into BED
