@@ -59,3 +59,30 @@ process AGAT_GFF2BED {
     agat_convert_sp_gff2bed.pl --gff ${gff} --out ${id}_annot.bed
     """
 }
+
+process AGAT_LONGEST_PROT {
+    label 'low'
+    container 'quay.io/biocontainers/agat:1.4.2--pl5321hdfd78af_0'
+
+    input:
+        tuple val(id), file(fa), file(gff)
+
+    output:
+       tuple val(id), path("${id}_longest_proteins.fasta"), emit: prots
+       path("${id}_longest_proteins.fasta"), emit: prots_only
+
+
+    script:
+
+    """
+    agat_sp_keep_longest_isoform.pl -gff ${gff} -o ${id}_longest_isoform.gff
+
+    agat_sp_extract_sequences.pl \
+      --gff ${id}_longest_isoform.gff \
+      --fasta ${fa} \
+      --type CDS \
+      --protein \
+      --output ${id}_longest_proteins.fasta
+
+    """
+}

@@ -13,7 +13,10 @@ include { AGAT_PROT as AGAT_PROT } from '../modules/AGAT.nf'
 include { COMBINE_BED as COMBINE_BED } from '../modules/BIN_SCRIPTS.nf'
 include { AGAT_GFF2BED as AGAT_GFF2BED } from '../modules/AGAT.nf'
 include { MCSCANX as MCSCANX } from '../modules/MCSCANX.nf'
-
+include { AGAT_LONGEST_PROT as AGAT_LONGEST_PROT } from '../modules/AGAT.nf'
+include { BUSCO_DB as BUSCO_DB } from '../modules/BUSCO.nf'
+include { BUSCO as BUSCO } from '../modules/BUSCO.nf'
+include { QUAST as QUAST } from '../modules/QUAST.nf'
 
 workflow SYN_SW {
     take:
@@ -65,5 +68,20 @@ workflow SYN_SW {
 
         //Run McScanX
         MCSCANX(DIAMOND_ALL.out.result, COMBINE_BED.out.combo_bed)
+
+
+        //BUSCO
+
+        //Get longest isoform prot seqs
+        AGAT_LONGEST_PROT(AGAT_STD.out.gff)
+
+        //Get Busco DB
+        BUSCO_DB()
+
+        //Run Busco
+        BUSCO(AGAT_LONGEST_PROT.out.prots,BUSCO_DB.out.busco_db)
+
+        //Running Quast
+        QUAST(input)
 
 }

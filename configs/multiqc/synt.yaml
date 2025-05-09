@@ -1,0 +1,13 @@
+run_modules:
+- busco
+- quast
+sp: {}
+module_order:
+
+# SYNT QC
+- busco:
+    name: BUSCO
+    path_filters: SYN/SYN_SW/BUSCO/*/*_busco.txt
+- quast:
+    name: Assembly Stats
+    path_filters: SYN/SYN_SW/QUAST/*/report.tsv

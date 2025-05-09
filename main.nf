@@ -11,8 +11,8 @@ if (params.workflow_opt == 'SYN') {
     }
 
 
-
 include { SYN as SYN } from './workflows/SYN.nf'
+include { MULTIQC as MULTIQC } from './workflows/MULTIQC.nf'
 
 
 workflow {
@@ -23,5 +23,12 @@ workflow {
         SYN(ch_input)
 
         }
+
+    if (params.workflow_opt == 'MULTIQC') {
+
+        MULTIQC()
+
+        }
+
 
 }
