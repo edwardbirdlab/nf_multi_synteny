@@ -73,7 +73,7 @@ process BLASTP_ALL {
 }
 
 process DIAMOND_ALL {
-    label 'low'
+    label 'blast'
     container 'buchfink/diamond:version2.1.11'
 
     input:
