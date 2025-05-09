@@ -12,6 +12,7 @@ include { AGAT_STD as AGAT_STD } from '../modules/AGAT.nf'
 include { AGAT_PROT as AGAT_PROT } from '../modules/AGAT.nf'
 include { COMBINE_BED as COMBINE_BED } from '../modules/BIN_SCRIPTS.nf'
 include { AGAT_GFF2BED as AGAT_GFF2BED } from '../modules/AGAT.nf'
+include { MCSCANX as MCSCANX } from '../modules/MCSCANX.nf'
 
 
 workflow SYN_SW {
@@ -63,6 +64,6 @@ workflow SYN_SW {
 
 
         //Run McScanX
-
+        MCSCANX(DIAMOND_ALL.out.result, COMBINE_BED.out.combo_bed)
 
 }
