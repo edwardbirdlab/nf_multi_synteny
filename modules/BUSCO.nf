@@ -23,17 +23,17 @@ process BUSCO {
     container 'ezlabgva/busco:v5.8.2_cv1'
 
     input:
-        tuple val(sample), file(fasta)
+        tuple val(id), file(fasta)
         file(busco_db)
 
     output:
-        path("./${sample}_busco"), emit: busco_results
+        path("./${id}_busco"), emit: busco_results
         path("versions.yml"), emit: versions
 
     script:
 
     """
-    busco -i ${fasta} -o ${sample}_busco -m genome --offline --download_path ${busco_db} --lineage_dataset ${params.busco_lineage}
+    busco -i ${fasta} -o ${id}_busco -m protein --offline --download_path ${busco_db} --lineage_dataset ${params.busco_lineage}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
