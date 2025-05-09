@@ -71,3 +71,36 @@ process BLASTP_ALL {
        -outfmt 6
     """
 }
+
+process DIAMOND_ALL {
+    label 'low'
+    container 'buchfink/diamond:version2.1.11'
+
+    input:
+        file(fa)
+
+    output:
+       path("all_prots_vs_all_prots.blast"), emit: result
+
+
+    script:
+
+    """
+    mkdir blast_db_nf
+
+    cat ${fa} > all_prots.fasta
+
+    diamond makedb --in all_prots.fasta -d all_prots
+
+    mv all_prots* blast_db_nf
+
+    diamond blastp \
+      -q all_prots.fasta \
+      -d blast_db_nf/all_prots \
+      -e 1e-10 \
+      --max-target-seqs 5 \
+      --outfmt 6 \
+      -o all_prots_vs_all_prots.blast \
+      --threads ${task.cpus}
+    """
+}

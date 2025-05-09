@@ -5,7 +5,7 @@ Requries set params:
 
 */
 
-include { BLASTP_ALL as BLASTP_ALL } from '../modules/BLASTP.nf'
+include { DIAMOND_ALL as DIAMOND_ALL } from '../modules/BLASTP.nf'
 include { FASTA_FILT as FASTA_FILT } from '../modules/BIN_SCRIPTS.nf'
 include { RENAME_CHR as RENAME_CHR } from '../modules/BIN_SCRIPTS.nf'
 include { AGAT_STD as AGAT_STD } from '../modules/AGAT.nf'
@@ -49,7 +49,7 @@ workflow SYN_SW {
         //Blast proteins
 
         //Combe Protein Fasta & Self-Blast
-        BLASTP_ALL(AGAT_PROT.out.prots_only.collect())
+        DIAMOND_ALL(AGAT_PROT.out.prots_only.collect())
 
         
 
