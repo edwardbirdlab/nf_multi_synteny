@@ -58,9 +58,8 @@ workflow SYN_SW {
 
         pairwise_ch = protein_ch
             .toList()
-            .collectMany { files ->
-                def labeled = files.indexed().collect { idx, f -> tuple("S${idx + 1}", f) }
-
+            .map { files ->
+                def labeled = files.indexed().collect { idx, f -> tuple("S${idx+1}", f) }
                 labeled.collectMany { t1 ->
                     labeled.collect { t2 ->
                         def label = "${t1[0]}_vs_${t2[0]}"
@@ -68,6 +67,8 @@ workflow SYN_SW {
                     }
                 }
             }
+            .flatten()
+            .buffer(size: 3)
             .filter { id, f1, f2 -> f1 != f2 }
 
         pairwise_ch.view{ "Pairwise combination: $it" }
