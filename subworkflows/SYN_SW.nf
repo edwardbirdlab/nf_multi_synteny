@@ -54,7 +54,6 @@ workflow SYN_SW {
 
         //Create pariwise protein set
         protein_ch = AGAT_PROT.out.prots_only
-        protein_ch.view{ "Input protein files: $it" }
 
         pairwise_ch = protein_ch
             .toList()
@@ -70,8 +69,6 @@ workflow SYN_SW {
             .flatten()
             .buffer(size: 3)
             .filter { id, f1, f2 -> f1 != f2 }
-
-        pairwise_ch.view{ "Pairwise combination: $it" }
 
         //Running pairwise blasts
         DIAMOND_ALL(pairwise_ch)
