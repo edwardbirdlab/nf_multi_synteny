@@ -6,7 +6,7 @@ process FASTA_FILT {
         tuple val(id), file(fa), file(gff)
 
     output:
-	   tuple val(id), file("filt_${fa}""), file(gff), emit: filt_fasta
+	   tuple val(id), file("filt_${fa}"), file(gff), emit: filt_fasta
 
 
     script:
