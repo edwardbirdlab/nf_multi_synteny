@@ -57,18 +57,17 @@ workflow SYN_SW {
         protein_ch.view{ "Input protein files: $it" }
 
         pairwise_ch = protein_ch
-            .collect()
+            .toList()
             .map { files ->
-                files.combinations(2).withIndex().collect { pair, index ->
-                    def f1 = pair[0]
-                    def f2 = pair[1]
-                    def id1 = f1.name.toString().tokenize('.')[0]
-                    def id2 = f2.name.toString().tokenize('.')[0]
-                    tuple("pair_${index + 1}", "${id1}_vs_${id2}", f1, f2)
+                def labeled = files.indexed().collect { idx, f -> tuple("S${idx+1}", f) }
+                labeled.collectMany { t1 ->
+                    labeled.collect { t2 ->
+                        def label = "${t1[0]}_vs_${t2[0]}"
+                        tuple(label, t1[1], t2[1])
+                    }
                 }
             }
             .flatten()
-            .buffer(size: 4)
 
         pairwise_ch.view{ "Pairwise combination: $it" }
 
