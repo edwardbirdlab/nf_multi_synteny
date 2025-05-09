@@ -67,7 +67,6 @@ workflow SYN_SW {
                     }
                 }
             }
-            .flatten()
 
         pairwise_ch.view{ "Pairwise combination: $it" }
 
