@@ -11,6 +11,7 @@ include { RENAME_CHR as RENAME_CHR } from '../modules/BIN_SCRIPTS.nf'
 include { AGAT_STD as AGAT_STD } from '../modules/AGAT.nf'
 include { AGAT_PROT as AGAT_PROT } from '../modules/AGAT.nf'
 include { COMBINE_BED as COMBINE_BED } from '../modules/BIN_SCRIPTS.nf'
+include { AGAT_GFF2BED as AGAT_GFF2BED } from '../modules/AGAT.nf'
 
 
 workflow SYN_SW {
