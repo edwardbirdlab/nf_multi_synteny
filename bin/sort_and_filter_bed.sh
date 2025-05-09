@@ -17,8 +17,8 @@ if [[ ! -f "$INPUT_BED" ]]; then
     exit 1
 fi
 
-# Sort by chromosome and start position, then filter out invalid lines
-sort -k1,1 -k2,2n "$INPUT_BED" | awk 'BEGIN {OFS="\t"} $4 != "" {print $1, $2, $3, $4}' > "$OUTPUT_BED"
+# Sort by chromosome and start position, then reorder columns to 1,4,2,3
+sort -k1,1 -k2,2n "$INPUT_BED" | awk 'BEGIN {OFS="\t"} $4 != "" {print $1, $4, $2, $3}' > "$OUTPUT_BED"
 
 # Check if the output file was created
 if [[ -f "$OUTPUT_BED" ]]; then
