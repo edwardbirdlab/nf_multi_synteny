@@ -90,13 +90,11 @@ process DIAMOND_ALL {
 
     cat ${fa} > all_prots.fasta
 
-    diamond makedb --in all_prots.fasta -d all_prots
-
-    mv all_prots* blast_db_nf
+    diamond makedb --in all_prots.fasta -d all_prots_db
 
     diamond blastp \
       -q all_prots.fasta \
-      -d blast_db_nf/all_prots \
+      -d all_prots_db \
       -e 1e-10 \
       --max-target-seqs 5 \
       --outfmt 6 \
