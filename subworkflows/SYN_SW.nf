@@ -31,11 +31,11 @@ workflow SYN_SW {
 
 
         //Filter small contigs
-        FASTA_FILT(input)
+        // FASTA_FILT(input)
 
 
         //Rename fasta and gff
-        RENAME_CHR(FASTA_FILT.out.filt_fasta)
+        RENAME_CHR(input)
 
 
 
