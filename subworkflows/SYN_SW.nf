@@ -105,4 +105,7 @@ workflow SYN_SW {
         //Running Quast
         QUAST(input)
 
+        //Running Orthofinder3
+        ORTHOFINDER(AGAT_PROT.out.prots_only.collect())
+
 }
