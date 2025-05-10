@@ -71,12 +71,12 @@ workflow SYN_SW {
             .filter { id, f1, f2 -> f1 != f2 }
 
         //Running pairwise blasts
-        DIAMOND_ALL(pairwise_ch)
+        //DIAMOND_ALL(pairwise_ch)
 
         //Collect all blasts
-        ch_concatenated_blast = DIAMOND_ALL.out.result
-            .collectFile(name: 'all_blast_results.txt')
-            .view { file -> "All BLAST results concatenated into: ${file.name}" }
+        //ch_concatenated_blast = DIAMOND_ALL.out.result
+        //    .collectFile(name: 'all_blast_results.txt')
+        //    .view { file -> "All BLAST results concatenated into: ${file.name}" }
 
         //Combine GFFs into BED
 
@@ -88,21 +88,21 @@ workflow SYN_SW {
 
 
         //Run McScanX
-        MCSCANX(ch_concatenated_blast, COMBINE_BED.out.combo_bed)
+        //MCSCANX(ch_concatenated_blast, COMBINE_BED.out.combo_bed)
 
 
         //BUSCO
 
         //Get longest isoform prot seqs
-        //AGAT_LONGEST_PROT(AGAT_STD.out.gff)
+        AGAT_LONGEST_PROT(AGAT_STD.out.gff)
 
         //Get Busco DB
-        //BUSCO_DB()
+        BUSCO_DB()
 
         //Run Busco
-        //BUSCO(AGAT_LONGEST_PROT.out.prots,BUSCO_DB.out.busco_db)
+        BUSCO(AGAT_LONGEST_PROT.out.prots,BUSCO_DB.out.busco_db)
 
         //Running Quast
-        //QUAST(input)
+        QUAST(input)
 
 }
