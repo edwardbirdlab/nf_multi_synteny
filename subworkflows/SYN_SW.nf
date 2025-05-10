@@ -107,6 +107,6 @@ workflow SYN_SW {
         QUAST(input)
 
         //Running Orthofinder3
-        ORTHOFINDER(AGAT_PROT.out.prots_only.collect())
+        ORTHOFINDER(AGAT_LONGEST_PROT.out.prots_only.collect())
 
 }
