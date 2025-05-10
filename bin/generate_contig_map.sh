@@ -8,15 +8,14 @@ PREFIX=$3
 
 if [[ -z "$INPUT_FASTA" || -z "$OUTPUT_TSV" || -z "$PREFIX" ]]; then
     echo "Usage: $0 input.fasta output.tsv PREFIX"
-    echo "Example: $0 genome.fasta genome_map.tsv ctg"
+    echo "Example: $0 genome.fasta genome_map.tsv ctg_"
     exit 1
 fi
 
 grep '^>' "$INPUT_FASTA" \
     | cut -c2- \
     | awk '{print $1}' \
-    | nl \
-    | awk -v prefix="$PREFIX" '{print prefix$1"\t"$2}' \
+    | awk -v prefix="$PREFIX" '{print prefix $1 "\t" $1}' \
     > "$OUTPUT_TSV"
 
 echo "Contig map saved to: $OUTPUT_TSV"
