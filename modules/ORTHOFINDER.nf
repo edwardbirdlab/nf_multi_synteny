@@ -6,10 +6,10 @@ process ORTHOFINDER_BG {
         path(fas, stageAs: 'fastas/')
 
     output:
-        path("OrthoFinder"), emit: output
-        path("OrthoFinder/Results_${params.project_name}/WorkingDirectory/*.fa"), emit: fasta
-        path("OrthoFinder/Results_${params.project_name}/WorkingDirectory/SequenceIDs.txt"), emit: seqids
-        path("OrthoFinder/Results_${params.project_name}/WorkingDirectory/SpeciesIDs.txt"), emit: spids
+        path("fastas/OrthoFinder"), emit: output
+        path("fastas/OrthoFinder/Results_${params.project_name}/WorkingDirectory/*.fa"), emit: fasta
+        path("fastas/OrthoFinder/Results_${params.project_name}/WorkingDirectory/SequenceIDs.txt"), emit: seqids
+        path("fastas/OrthoFinder/Results_${params.project_name}/WorkingDirectory/SpeciesIDs.txt"), emit: spids
 
 
     script:
