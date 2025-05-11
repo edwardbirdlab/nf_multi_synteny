@@ -135,7 +135,7 @@ process DIAMOND_OF {
     """
     Q_ID=\$(basename ${fa} .fa | grep -o '[0-9]\\+')
     DB_ID=\$(basename ${db} .dmnd | grep -o '[0-9]\\+')
-    DB_NAME=\$(basename ${db} .dmnd
+    DB_NAME=\$(basename ${db} .dmnd)
 
     OUTFILE="Blast\${Q_ID}_\${DB_ID}.txt"
     
