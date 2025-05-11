@@ -17,7 +17,7 @@ include { AGAT_LONGEST_PROT as AGAT_LONGEST_PROT } from '../modules/AGAT.nf'
 include { BUSCO_DB as BUSCO_DB } from '../modules/BUSCO.nf'
 include { BUSCO as BUSCO } from '../modules/BUSCO.nf'
 include { QUAST as QUAST } from '../modules/QUAST.nf'
-include { ORTHOFINDER_BG as ORTHOFINDER_BG } from '../modules/ORTHOFINDER_BG.nf'
+include { ORTHOFINDER_BG as ORTHOFINDER_BG } from '../modules/ORTHOFINDER.nf'
 
 workflow SYN_SW {
     take:

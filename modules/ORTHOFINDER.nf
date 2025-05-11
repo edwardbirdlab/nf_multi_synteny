@@ -12,6 +12,12 @@ process ORTHOFINDER_BG {
     script:
 
     """
+    for f in fastas/*_longest_proteins.fasta; do
+      newname=\$(basename "\$f" _longest_proteins.fasta).fasta
+      cp "\$f" "\$newname"
+    done
+
+
     mkdir temp_pickle
 
    orthofinder \\
