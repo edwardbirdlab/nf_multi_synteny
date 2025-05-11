@@ -18,9 +18,9 @@ include { BUSCO_DB as BUSCO_DB } from '../modules/BUSCO.nf'
 include { BUSCO as BUSCO } from '../modules/BUSCO.nf'
 include { QUAST as QUAST } from '../modules/QUAST.nf'
 include { ORTHOFINDER_BG as ORTHOFINDER_BG } from '../modules/ORTHOFINDER.nf'
-include { DIAMOND_OF_DB as DIAMOND_OF_DB } from '../modules/ORTHOFINDER.nf'
+include { DIAMOND_OF_DB as DIAMOND_OF_DB } from '../modules/BLASTP.nf'
 include { DIAMOND_OF as DIAMOND_OF } from '../modules/BLASTP.nf'
-include { ORTHOFINDER_BG_RERUN as ORTHOFINDER_BG_RERUN } from '../modules/BLASTP.nf'
+include { ORTHOFINDER_BG_RERUN as ORTHOFINDER_BG_RERUN } from '../modules/ORTHOFINDER.nf'
 
 workflow SYN_SW {
     take:
