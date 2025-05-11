@@ -52,6 +52,9 @@ process ORTHOFINDER_BG_RERUN {
 
     mv *.txt.gz OrthoFinder/Results_${params.project_name}/WorkingDirectory/
 
+    cp OrthoFinder/Results_${params.project_name}/WorkingDirectory/SpeciesIDs.txt OrthoFinder
+    cp OrthoFinder/Results_${params.project_name}/WorkingDirectory/SequenceIDs.txt OrthoFinder
+
    orthofinder \\
         -t ${task.cpus} \\
         -a ${task.cpus} \\
