@@ -127,7 +127,7 @@ process DIAMOND_OF {
         tupel file(fa), file(db)
 
     output:
-       path("*.txt.gz), emit: result
+       path("*.txt.gz"), emit: result
 
 
     script:
