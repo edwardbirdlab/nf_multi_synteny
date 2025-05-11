@@ -1,4 +1,4 @@
-process ORTHOFINDER {
+process ORTHOFINDER_BG {
     label 'lowmem'
 	container 'quay.io/biocontainers/orthofinder:3.0.1b1--hdfd78af_0'
 
@@ -19,6 +19,7 @@ process ORTHOFINDER {
         -a ${task.cpus} \\
         -p temp_pickle \\
         -f fastas \\
-        -n ${params.project_name}
+        -n ${params.project_name} \\
+        -op
     """
 }

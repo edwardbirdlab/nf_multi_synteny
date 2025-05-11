@@ -17,7 +17,7 @@ include { AGAT_LONGEST_PROT as AGAT_LONGEST_PROT } from '../modules/AGAT.nf'
 include { BUSCO_DB as BUSCO_DB } from '../modules/BUSCO.nf'
 include { BUSCO as BUSCO } from '../modules/BUSCO.nf'
 include { QUAST as QUAST } from '../modules/QUAST.nf'
-include { ORTHOFINDER as ORTHOFINDER } from '../modules/ORTHOFINDER.nf'
+include { ORTHOFINDER_BG as ORTHOFINDER_BG } from '../modules/ORTHOFINDER_BG.nf'
 
 workflow SYN_SW {
     take:
@@ -107,6 +107,6 @@ workflow SYN_SW {
         QUAST(input)
 
         //Running Orthofinder3
-        ORTHOFINDER(AGAT_LONGEST_PROT.out.prots_only.collect())
+        ORTHOFINDER_BG(AGAT_LONGEST_PROT.out.prots_only.collect())
 
 }
