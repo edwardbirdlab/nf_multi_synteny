@@ -98,3 +98,47 @@ process DIAMOND_ALL {
       --threads ${task.cpus}
     """
 }
+
+process DIAMOND_OF_DB {
+    label 'blast'
+    container 'buchfink/diamond:version2.1.11'
+
+    input:
+        file(fa)
+
+    output:
+       path("*.dmnd"), emit: db
+
+
+    script:
+
+    """
+    BASENAME=\$(basename ${fa} .fa)
+    
+    diamond makedb --in ${fa} -d diamondDB\${BASENAME}
+    """
+}
+
+process DIAMOND_OF {
+    label 'blast'
+    container 'buchfink/diamond:version2.1.11'
+
+    input:
+        tupel file(fa), file(db)
+
+    output:
+       path("*.txt.gz), emit: result
+
+
+    script:
+
+    """
+    Q_ID=\$(basename ${query} .fa | grep -o '[0-9]\\+')
+    DB_ID=\$(basename ${db} .dmnd | grep -o '[0-9]\\+')
+    DB_NAME=\$(basename ${db} .dmnd
+
+    OUTFILE="Blast\${Q_ID}_\${DB_ID}.txt"
+    
+    diamond blastp -d \$DB_NAME -q ${fa} -o \$OUTFILE --more-sensitive -p 1 --quiet -e 0.001 --compress 1
+    """
+}

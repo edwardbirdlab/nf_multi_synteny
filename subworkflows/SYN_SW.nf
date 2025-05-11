@@ -18,6 +18,9 @@ include { BUSCO_DB as BUSCO_DB } from '../modules/BUSCO.nf'
 include { BUSCO as BUSCO } from '../modules/BUSCO.nf'
 include { QUAST as QUAST } from '../modules/QUAST.nf'
 include { ORTHOFINDER_BG as ORTHOFINDER_BG } from '../modules/ORTHOFINDER.nf'
+include { DIAMOND_OF_DB as DIAMOND_OF_DB } from '../modules/ORTHOFINDER.nf'
+include { DIAMOND_OF as DIAMOND_OF } from '../modules/BLASTP.nf'
+include { ORTHOFINDER_BG_RERUN as ORTHOFINDER_BG_RERUN } from '../modules/BLASTP.nf'
 
 workflow SYN_SW {
     take:
@@ -108,5 +111,22 @@ workflow SYN_SW {
 
         //Running Orthofinder3
         ORTHOFINDER_BG(AGAT_LONGEST_PROT.out.prots_only.collect())
+
+        //making diamond dbs
+        DIAMOND_OF_DB(ORTHOFINDER_BG.out.fasta.flatten())
+
+        //Channel For Blasts
+        ch_diamond_db = DIAMOND_OF_DB.out.db
+        ch_diamond_query = ORTHOFINDER_BG.out.fasta.flatten())
+
+        ch_diamond_all = ch_diamond_db.combine(ch_diamond_query)
+
+        //Running Diamond
+        DIAMOND_OF(ch_diamond_all)
+
+        //Running orthofinder
+        ORTHOFINDER_BG_RERUN(ORTHOFINDER_BG.out.output, DIAMOND_OF.out.result.collect())
+
+
 
 }
