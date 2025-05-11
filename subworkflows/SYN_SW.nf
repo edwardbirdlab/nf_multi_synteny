@@ -104,7 +104,7 @@ workflow SYN_SW {
         BUSCO_DB()
 
         //Run Busco
-        BUSCO(AGAT_LONGEST_PROT.out.prots,BUSCO_DB.out.busco_db)
+        //BUSCO(AGAT_LONGEST_PROT.out.prots,BUSCO_DB.out.busco_db)
 
         //Running Quast
         QUAST(input)
