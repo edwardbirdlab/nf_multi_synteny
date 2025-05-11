@@ -124,7 +124,7 @@ process DIAMOND_OF {
     container 'buchfink/diamond:version2.1.11'
 
     input:
-        tupel file(fa), file(db)
+        tuple file(fa), file(db)
 
     output:
        path("*.txt.gz"), emit: result
