@@ -119,7 +119,7 @@ workflow SYN_SW {
         ch_diamond_db = DIAMOND_OF_DB.out.db
         ch_diamond_query = ORTHOFINDER_BG.out.fasta.flatten()
 
-        ch_diamond_all = ch_diamond_db.combine(ch_diamond_query)
+        ch_diamond_all = ch_diamond_query.combine(ch_diamond_db)
 
         //Running Diamond
         DIAMOND_OF(ch_diamond_all)
