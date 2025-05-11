@@ -17,7 +17,7 @@ process ORTHOFINDER_BG {
     """
     for f in fastas/*_longest_proteins.fasta; do
       newname="fastas/\$(basename "\$f" _longest_proteins.fasta).fasta"
-      mv "\$f" "$newname"
+      mv "\$f" "\$newname"
     done
 
 
