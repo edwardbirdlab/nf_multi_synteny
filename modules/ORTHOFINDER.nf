@@ -39,7 +39,7 @@ process ORTHOFINDER_BG_RERUN {
 
     input:
         path(of_dir)
-        path(blast, stageAs: 'OrthoFinder/Results_${params.project_name}/WorkingDirectory')
+        path(blast, stageAs: 'OrthoFinder/Results_*/WorkingDirectory')
 
     output:
         path("OrthoFinder"), emit: output
@@ -55,7 +55,6 @@ process ORTHOFINDER_BG_RERUN {
         -a ${task.cpus} \\
         -p temp_pickle \\
         -b OrthoFinder \\
-        -n ${params.project_name} \\
-        -op
+        -n ${params.project_name}
     """
 }
