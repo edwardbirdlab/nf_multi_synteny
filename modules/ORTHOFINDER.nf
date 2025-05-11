@@ -39,7 +39,7 @@ process ORTHOFINDER_BG_RERUN {
 
     input:
         path(of_dir)
-        path(blast, stageAs: 'OrthoFinder/Results_*/WorkingDirectory')
+        path(blast)
 
     output:
         path("OrthoFinder"), emit: output
@@ -49,6 +49,8 @@ process ORTHOFINDER_BG_RERUN {
 
     """
     mkdir temp_pickle
+
+    mv *.txt.gz OrthoFinder/Results_${params.project_name}/WorkingDirectory/
 
    orthofinder \\
         -t ${task.cpus} \\
