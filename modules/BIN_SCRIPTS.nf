@@ -53,3 +53,38 @@ process COMBINE_BED {
     sort_and_filter_bed.sh combined.bed combined_format.bed
     """
 }
+process COMBINE_BLAST {
+    label 'verylow'
+    container 'ubuntu:22.04'
+
+    input:
+        file(blasts)
+
+    output:
+       path("combined_input.blast"), emit: combo
+
+
+    script:
+
+    """
+    gunzip *.gz
+    cat *.txt > combined_input.blast
+    """
+}
+process PCG_COUNT {
+    label 'verylow'
+    container 'ubuntu:22.04'
+
+    input:
+        tuple val(id), file(prots)
+
+    output:
+       path("${id}_prot_count.txt"), emit: counts
+
+
+    script:
+
+    """
+    grep -c '^>' ${prots} > ${id}_prot_count.txt
+    """
+}

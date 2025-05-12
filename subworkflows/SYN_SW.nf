@@ -21,6 +21,7 @@ include { ORTHOFINDER_BG as ORTHOFINDER_BG } from '../modules/ORTHOFINDER.nf'
 include { DIAMOND_OF_DB as DIAMOND_OF_DB } from '../modules/BLASTP.nf'
 include { DIAMOND_OF as DIAMOND_OF } from '../modules/BLASTP.nf'
 include { ORTHOFINDER_BG_RERUN as ORTHOFINDER_BG_RERUN } from '../modules/ORTHOFINDER.nf'
+include { COMBINE_BLAST as COMBINE_BLAST } from '../modules/BIN_SCRIPTS.nf'
 
 workflow SYN_SW {
     take:
@@ -91,10 +92,6 @@ workflow SYN_SW {
         COMBINE_BED(AGAT_GFF2BED.out.bed_only.collect())
 
 
-        //Run McScanX
-        //MCSCANX(ch_concatenated_blast, COMBINE_BED.out.combo_bed)
-
-
         //BUSCO
 
         //Get longest isoform prot seqs
@@ -104,7 +101,7 @@ workflow SYN_SW {
         BUSCO_DB()
 
         //Run Busco
-        //BUSCO(AGAT_LONGEST_PROT.out.prots,BUSCO_DB.out.busco_db)
+        BUSCO(AGAT_LONGEST_PROT.out.prots,BUSCO_DB.out.busco_db)
 
         //Running Quast
         QUAST(input)
@@ -126,5 +123,11 @@ workflow SYN_SW {
 
         //Running orthofinder
         ORTHOFINDER_BG_RERUN(ORTHOFINDER_BG.out.output, DIAMOND_OF.out.result.collect())
+
+        //Combine Blast
+        COMBINE_BLAST(DIAMOND_OF.out.result.collect())
+
+        //Run McScanX
+        MCSCANX(COMBINE_BLAST.out.combo, COMBINE_BED.out.combo_bed)
 
 }

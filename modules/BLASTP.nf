@@ -139,6 +139,6 @@ process DIAMOND_OF {
 
     OUTFILE="Blast\${Q_ID}_\${DB_ID}.txt"
     
-    diamond blastp -d \$DB_NAME -q ${fa} -o \$OUTFILE --more-sensitive -p 1 --quiet -e 0.001 --compress 1
+    diamond blastp -d \$DB_NAME -q ${fa} -o \$OUTFILE --more-sensitive -p ${task.cpus} --quiet -e 0.001 --compress 1
     """
 }
