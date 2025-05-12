@@ -67,8 +67,7 @@ process COMBINE_BLAST {
     script:
 
     """
-    gunzip *.gz
-    cat *.txt > combined_input.blast
+    gunzip -c *.gz > combined_input.blast
     """
 }
 process PCG_COUNT {
