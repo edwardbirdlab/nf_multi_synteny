@@ -59,7 +59,6 @@ process ORTHOFINDER_BG_RERUN {
         -t ${task.cpus} \\
         -a ${task.cpus} \\
         -p temp_pickle \\
-        -b OrthoFinder \\
-        -n ${params.project_name}
+        -b OrthoFinder/Results_${params.project_name}
     """
 }
