@@ -7,7 +7,7 @@ process AGAT_STD {
 
     output:
 	   tuple val(id), path(fa), path("${id}_annot_std.gff3"), emit: gff
-       file("versions.yml"), emit: versions
+       path("versions.yml"), emit: versions
 
 
     script:
@@ -33,8 +33,7 @@ process AGAT_PROT {
     output:
        tuple val(id), path("${id}_proteins.fasta"), emit: prots
        path("${id}_proteins.fasta"), emit: prots_only
-       file("versions.yml"), emit: versions
-
+       path("versions.yml"), emit: versions
 
     script:
 
@@ -64,8 +63,7 @@ process AGAT_GFF2BED {
     output:
        tuple val(id), path(fa), path("${id}_annot.bed"), emit: bed
        path("${id}_annot.bed"), emit: bed_only
-       file("versions.yml"), emit: versions
-
+       path("versions.yml"), emit: versions
 
     script:
 
@@ -90,8 +88,7 @@ process AGAT_LONGEST_PROT {
     output:
        tuple val(id), path("${id}_longest_proteins.fasta"), emit: prots
        path("${id}_longest_proteins.fasta"), emit: prots_only
-       file("versions.yml"), emit: versions
-
+       path("versions.yml"), emit: versions
 
     script:
 
@@ -122,8 +119,7 @@ process AGAT_STATS {
 
     output:
        tuple val(id), path("${id}_agat_stats.fasta"), emit: stats
-       file("versions.yml"), emit: versions
-
+       path("versions.yml"), emit: versions
 
     script:
 
