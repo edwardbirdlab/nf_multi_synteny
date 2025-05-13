@@ -22,6 +22,7 @@ include { DIAMOND_OF_DB as DIAMOND_OF_DB } from '../modules/BLASTP.nf'
 include { DIAMOND_OF as DIAMOND_OF } from '../modules/BLASTP.nf'
 include { ORTHOFINDER_BG_RERUN as ORTHOFINDER_BG_RERUN } from '../modules/ORTHOFINDER.nf'
 include { COMBINE_BLAST as COMBINE_BLAST } from '../modules/BIN_SCRIPTS.nf'
+include { BLAST_RENAME as BLAST_RENAME } from '../modules/BIN_SCRIPTS.nf'
 
 workflow SYN_SW {
     take:
@@ -124,8 +125,11 @@ workflow SYN_SW {
         //Running orthofinder
         ORTHOFINDER_BG_RERUN(ORTHOFINDER_BG.out.output, DIAMOND_OF.out.result.collect())
 
+        //Rename Bast
+        BLAST_RENAME(DIAMOND_OF.out.result)
+
         //Combine Blast
-        COMBINE_BLAST(DIAMOND_OF.out.result.collect())
+        COMBINE_BLAST(BLAST_RENAME.out.blast.collect())
 
         //Run McScanX
         MCSCANX(COMBINE_BLAST.out.combo, COMBINE_BED.out.combo_bed)

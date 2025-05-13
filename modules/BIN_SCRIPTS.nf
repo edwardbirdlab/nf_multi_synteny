@@ -87,3 +87,20 @@ process PCG_COUNT {
     grep -c '^>' ${prots} > ${id}_prot_count.txt
     """
 }
+process BLAST_RENAME {
+    label 'verylow'
+    container 'ubuntu:22.04'
+
+    input:
+        tuple val(id), file(blast), file(mapping)
+
+    output:
+       path("${id}_rename.blast"), emit: blast
+
+
+    script:
+
+    """
+    replace_ids.sh ${mapping} ${blast} ${id}_rename.blast
+    """
+}
