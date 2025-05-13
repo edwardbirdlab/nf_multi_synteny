@@ -126,7 +126,8 @@ workflow SYN_SW {
         ORTHOFINDER_BG_RERUN(ORTHOFINDER_BG.out.output, DIAMOND_OF.out.result.collect())
 
         //Rename Bast
-        BLAST_RENAME(DIAMOND_OF.out.result)
+        ch_blast_rename = DIAMOND_OF.out.result.combine(ORTHOFINDER_BG.out.seqids)
+        BLAST_RENAME(ch_blast_rename)
 
         //Combine Blast
         COMBINE_BLAST(BLAST_RENAME.out.blast.collect())
