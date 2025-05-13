@@ -92,15 +92,16 @@ process BLAST_RENAME {
     container 'ubuntu:22.04'
 
     input:
-        tuple val(id), file(blast), file(mapping)
+        tuple file(blast), file(mapping)
 
     output:
-       path("${id}_rename.blast"), emit: blast
+       path("${blast}"), emit: blast
 
 
     script:
 
     """
-    replace_ids.sh ${mapping} ${blast} ${id}_rename.blast
+    mv ${blast} tmp.blast
+    replace_ids.sh ${mapping} tmp.blast ${blast}
     """
 }
