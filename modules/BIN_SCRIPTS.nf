@@ -54,6 +54,7 @@ process COMBINE_BED {
     """
 }
 process COMBINE_BLAST {
+    stageInMode 'copy'
     label 'verylow'
     container 'ubuntu:22.04'
 
