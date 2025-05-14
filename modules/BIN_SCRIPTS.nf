@@ -102,7 +102,7 @@ process BLAST_RENAME {
 
     """
     prefix=\$(basename ${blast} .txt.gz)
-    gunzip ${blast}
+    gunzip -c ${blast} > \${prefix}.txt
     replace_ids.sh ${mapping} \${prefix}.txt \${prefix}.blast
     """
 }
