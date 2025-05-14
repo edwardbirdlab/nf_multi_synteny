@@ -23,6 +23,7 @@ include { DIAMOND_OF as DIAMOND_OF } from '../modules/BLASTP.nf'
 include { ORTHOFINDER_BG_RERUN as ORTHOFINDER_BG_RERUN } from '../modules/ORTHOFINDER.nf'
 include { COMBINE_BLAST as COMBINE_BLAST } from '../modules/BIN_SCRIPTS.nf'
 include { BLAST_RENAME as BLAST_RENAME } from '../modules/BIN_SCRIPTS.nf'
+include { AGAT_STATS as AGAT_STATS } from '../modules/AGAT.nf'
 
 workflow SYN_SW {
     take:
@@ -49,6 +50,9 @@ workflow SYN_SW {
 
         //AGAT GFF Standard
         AGAT_STD(RENAME_CHR.out.remap)
+
+        //AGAT get stats
+        AGAT_STATS(AGAT_STD.out.gff)
 
         //GFFRead Extract Proteins
         AGAT_PROT(AGAT_STD.out.gff)
