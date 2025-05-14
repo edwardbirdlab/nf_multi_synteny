@@ -1,5 +1,5 @@
 process MCSCANX {
-    label 'blast'
+    label 'mcscanx'
 	container 'quay.io/biocontainers/mcscanx:0.1--h9948957_0'
 
     input:
@@ -13,7 +13,8 @@ process MCSCANX {
     script:
 
     """
-    mv ${blast} combined_input.blast
+    mv ${blast} combined_input_tmp.blast
+    awk '{\$1=\$1}1' OFS='\t' combined_input_tmp.blast > combined_input.blast
     mv ${gff} combined_input.gff
     MCScanX combined_input \
         -b ${params.block_pattern} \
