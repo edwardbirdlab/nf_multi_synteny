@@ -54,7 +54,6 @@ process COMBINE_BED {
     """
 }
 process COMBINE_BLAST {
-    stageInMode 'copy'
     label 'verylow'
     container 'ubuntu:22.04'
 
@@ -68,7 +67,7 @@ process COMBINE_BLAST {
     script:
 
     """
-    gunzip -c *.gz > combined_input.blast
+    cat *.blast > combined_input.blast
     """
 }
 process PCG_COUNT {
@@ -102,7 +101,8 @@ process BLAST_RENAME {
     script:
 
     """
-    mv ${blast} tmp.blast
-    replace_ids.sh ${mapping} tmp.blast ${blast}
+    prefix=\$(basename ${blast} .txt.gz)
+    gunzip ${blast}
+    replace_ids.sh ${mapping} \${prefix}.txt \${prefix}.blast
     """
 }
