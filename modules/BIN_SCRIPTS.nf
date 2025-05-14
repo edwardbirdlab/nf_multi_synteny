@@ -95,7 +95,7 @@ process BLAST_RENAME {
         tuple file(blast), file(mapping)
 
     output:
-       path("${blast}"), emit: blast
+       path("*.blast"), emit: blast
 
 
     script:
