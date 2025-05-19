@@ -147,7 +147,7 @@ workflow SYN_SW {
         COMBINE_BED_DUP(ch_pairwise_bed)
 
         //Mix in the full combined blast
-        ch_pairwise_mcscanx = COMBINE_BED_DUP.out.combo_bed.conbine(COMBINE_BLAST.out.combo)
+        ch_pairwise_mcscanx = COMBINE_BED_DUP.out.combo_bed.combine(COMBINE_BLAST.out.combo)
 
         MCSCANX(ch_pairwise_mcscanx)
 
