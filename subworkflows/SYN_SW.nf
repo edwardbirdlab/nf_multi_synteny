@@ -24,6 +24,8 @@ include { ORTHOFINDER_BG_RERUN as ORTHOFINDER_BG_RERUN } from '../modules/ORTHOF
 include { COMBINE_BLAST as COMBINE_BLAST } from '../modules/BIN_SCRIPTS.nf'
 include { BLAST_RENAME as BLAST_RENAME } from '../modules/BIN_SCRIPTS.nf'
 include { AGAT_STATS as AGAT_STATS } from '../modules/AGAT.nf'
+include { COMBINE_BED_DUP as COMBINE_BED_DUP } from '../modules/BIN_SCRIPTS.nf'
+
 
 workflow SYN_SW {
     take:
@@ -137,6 +139,16 @@ workflow SYN_SW {
         COMBINE_BLAST(BLAST_RENAME.out.blast.collect())
 
         //Run McScanX
-        MCSCANX(COMBINE_BLAST.out.combo, COMBINE_BED.out.combo_bed)
+        //Create pairwise mix
+        ch_pairwise_bed = AGAT_GFF2BED.out.bed_only.combine(AGAT_GFF2BED.out.bed_only).filter { id1, g1, id2, g2 -> g1 != g2 }
+        ch_pairwise_bed.view()
+
+        //Combine pairwise beds
+        COMBINE_BED_DUP(ch_pairwise_bed)
+
+        //Mix in the full combined blast
+        ch_pairwise_mcscanx = COMBINE_BED_DUP.out.combo_bed.conbine(COMBINE_BLAST.out.combo)
+
+        MCSCANX(ch_pairwise_mcscanx)
 
 }
