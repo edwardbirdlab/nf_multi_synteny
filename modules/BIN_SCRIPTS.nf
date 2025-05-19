@@ -53,6 +53,27 @@ process COMBINE_BED {
     sort_and_filter_bed.sh combined.bed combined_format.bed
     """
 }
+
+process COMBINE_BED_DUP {
+    label 'verylow'
+    container 'ubuntu:22.04'
+
+    input:
+        tuple val(id1), file(gff1), val(id2), file(gff2)
+
+    output:
+       tuple val(sample_combo), path("${sample_combo}_combined_format.bed"), emit: combo_bed
+
+    sample_combo = "${id1}_${id2}"
+
+    script:
+
+    """
+    cat ${gff1} ${gff2} > ${sample_combo}_combined.bed
+    sort_and_filter_bed.sh ${sample_combo}_combined.bed ${sample_combo}_combined_format.bed
+    """
+}
+
 process COMBINE_BLAST {
     label 'verylow'
     container 'ubuntu:22.04'
