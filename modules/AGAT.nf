@@ -63,6 +63,7 @@ process AGAT_GFF2BED {
     output:
        tuple val(id), path(fa), path("${id}_annot.bed"), emit: bed
        path("${id}_annot.bed"), emit: bed_only
+       tuple val(id), path("${id}_annot.bed"), emit: for_mcscanx
        path("versions.yml"), emit: versions
 
     script:

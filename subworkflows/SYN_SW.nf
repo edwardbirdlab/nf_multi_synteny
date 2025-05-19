@@ -140,7 +140,7 @@ workflow SYN_SW {
 
         //Run McScanX
         //Create pairwise mix
-        ch_pairwise_bed = AGAT_GFF2BED.out.bed_only.combine(AGAT_GFF2BED.out.bed_only).filter { id1, g1, id2, g2 -> g1 != g2 }
+        ch_pairwise_bed = AGAT_GFF2BED.out.for_mcscanx.combine(AGAT_GFF2BED.out.for_mcscanx).filter { id1, g1, id2, g2 -> g1 != g2 }
         ch_pairwise_bed.view()
 
         //Combine pairwise beds
