@@ -64,9 +64,10 @@ process COMBINE_BED_DUP {
     output:
        tuple val(sample_combo), path("${sample_combo}_combined_format.bed"), emit: combo_bed
 
-    sample_combo = "${id1}_${id2}"
 
     script:
+
+    sample_combo = "${id1}_${id2}"
 
     """
     cat ${gff1} ${gff2} > ${sample_combo}_combined.bed
