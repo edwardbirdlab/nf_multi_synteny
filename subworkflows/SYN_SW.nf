@@ -59,37 +59,6 @@ workflow SYN_SW {
         //GFFRead Extract Proteins
         AGAT_PROT(AGAT_STD.out.gff)
 
-
-
-
-        //Blast proteins
-
-        //Create pariwise protein set
-        protein_ch = AGAT_PROT.out.prots_only
-
-        pairwise_ch = protein_ch
-            .toList()
-            .map { files ->
-                def labeled = files.indexed().collect { idx, f -> tuple("S${idx+1}", f) }
-                labeled.collectMany { t1 ->
-                    labeled.collect { t2 ->
-                        def label = "${t1[0]}_vs_${t2[0]}"
-                        tuple(label, t1[1], t2[1])
-                    }
-                }
-            }
-            .flatten()
-            .buffer(size: 3)
-            .filter { id, f1, f2 -> f1 != f2 }
-
-        //Running pairwise blasts
-        //DIAMOND_ALL(pairwise_ch)
-
-        //Collect all blasts
-        //ch_concatenated_blast = DIAMOND_ALL.out.result
-        //    .collectFile(name: 'all_blast_results.txt')
-        //    .view { file -> "All BLAST results concatenated into: ${file.name}" }
-
         //Combine GFFs into BED
 
         //GFF to BED
@@ -131,12 +100,42 @@ workflow SYN_SW {
         //Running orthofinder
         ORTHOFINDER_BG_RERUN(ORTHOFINDER_BG.out.output, DIAMOND_OF.out.result.collect())
 
+
+        //Blast proteins
+
+        //Create pariwise protein set
+        protein_ch = AGAT_PROT.out.prots_only
+
+        pairwise_ch = protein_ch
+            .toList()
+            .map { files ->
+                def labeled = files.indexed().collect { idx, f -> tuple("S${idx+1}", f) }
+                labeled.collectMany { t1 ->
+                    labeled.collect { t2 ->
+                        def label = "${t1[0]}_vs_${t2[0]}"
+                        tuple(label, t1[1], t2[1])
+                    }
+                }
+            }
+            .flatten()
+            .buffer(size: 3)
+            .filter { id, f1, f2 -> f1 != f2 }
+
+        Running pairwise blasts
+        DIAMOND_ALL(pairwise_ch)
+
+        Collect all blasts
+        ch_concatenated_blast = DIAMOND_ALL.out.result
+            .collectFile(name: 'all_blast_results.txt')
+            .view { file -> "All BLAST results concatenated into: ${file.name}" }
+
+
         //Rename Bast
-        ch_blast_rename = DIAMOND_OF.out.result.combine(ORTHOFINDER_BG.out.seqids)
-        BLAST_RENAME(ch_blast_rename)
+        //ch_blast_rename = DIAMOND_OF.out.result.combine(ORTHOFINDER_BG.out.seqids)
+        //BLAST_RENAME(ch_blast_rename)
 
         //Combine Blast
-        COMBINE_BLAST(BLAST_RENAME.out.blast.collect())
+        //COMBINE_BLAST(BLAST_RENAME.out.blast.collect())
 
         //Run McScanX
         //Create pairwise mix
@@ -146,7 +145,7 @@ workflow SYN_SW {
         COMBINE_BED_DUP(ch_pairwise_bed)
 
         //Mix in the full combined blast
-        ch_pairwise_mcscanx = COMBINE_BED_DUP.out.combo_bed.combine(COMBINE_BLAST.out.combo)
+        ch_pairwise_mcscanx = COMBINE_BED_DUP.out.combo_bed.combine(ch_concatenated_blast)
 
         MCSCANX(ch_pairwise_mcscanx)
 
