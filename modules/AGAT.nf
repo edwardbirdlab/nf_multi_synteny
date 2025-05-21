@@ -97,7 +97,7 @@ process AGAT_GFF2BED_PAIR {
         tuple val(id), file(gff1), file(gff2), file(blast)
 
     output:
-       tuple val(id), file(${id}_combined_format.bed), file(blast), emit: for_mcscanx
+       tuple val(id), path("${id}_combined_format.bed"), path(blast), emit: for_mcscanx
 
 
     script:
