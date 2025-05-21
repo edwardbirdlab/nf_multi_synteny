@@ -40,7 +40,7 @@ process MCSCANX_PLEX {
     script:
 
     """
-    mv ${blast} combined_input_tmp.blast
+    mv ${blast} combined_input.blast
     mv ${gff} combined_input.gff
     MCScanX combined_input \
         -b ${params.block_pattern} \
