@@ -98,3 +98,47 @@ process DIAMOND_ALL {
       --threads ${task.cpus}
     """
 }
+
+process DIAMOND_PAIR {
+    label 'blast'
+    container 'buchfink/diamond:version2.1.11'
+
+    input:
+        tuple val(id1), file(gff1), file(fa1), val(id2), file(gff2), file(fa2)
+
+    output:
+       tuple val(sample_combo), path("${sample_combo}_combined_format.bed"), path("${sample_combo}.blast"), emit: result
+
+
+    script:
+
+    sample_combo = "${id1}_${id2}"
+
+    """
+    diamond makedb --in ${fa1} -d prots_db_1
+    diamond makedb --in ${fa2} -d prots_db_2
+
+    diamond blastp \
+      -q ${fa1} \
+      -d prots_db_2 \
+      -e ${params.diamond_e_value} \
+      --max-target-seqs 5 \
+      --outfmt 6 \
+      -o ${id1}.blast \
+      --threads ${task.cpus}
+
+    diamond blastp \
+      -q ${fa2} \
+      -d prots_db_1 \
+      -e ${params.diamond_e_value} \
+      --max-target-seqs 5 \
+      --outfmt 6 \
+      -o ${id2}.blast \
+      --threads ${task.cpus}
+
+    cat ${id1}.blast ${id2}.blast > ${sample_combo}.blast
+
+    cat ${gff1} ${gff2} > ${sample_combo}_combined.bed
+    sort_and_filter_bed.sh ${sample_combo}_combined.bed ${sample_combo}_combined_format.bed
+    """
+}

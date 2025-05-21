@@ -19,6 +19,7 @@ include { BUSCO as BUSCO } from '../modules/BUSCO.nf'
 include { QUAST as QUAST } from '../modules/QUAST.nf'
 include { COMBINE_BED_DUP as COMBINE_BED_DUP } from '../modules/BIN_SCRIPTS.nf'
 include { MCSCANX_PLEX as MCSCANX_PLEX } from '../modules/MCSCANX.nf'
+include { DIAMOND_PAIR as DIAMOND_PAIR } from '../modules/BLASTP.nf'
 
 workflow SYN_SW {
     take:
@@ -73,7 +74,7 @@ workflow SYN_SW {
             .filter { id, f1, f2 -> f1 != f2 }
 
         //Running pairwise blasts
-        DIAMOND_ALL(pairwise_ch)
+        //DIAMOND_ALL(pairwise_ch)
 
         //Collect all blasts
         ch_concatenated_blast = DIAMOND_ALL.out.result
@@ -121,7 +122,7 @@ workflow SYN_SW {
 
 
         //testing new channel scheme
-        ch_testing = AGAT_PROT.out.all
+        ch_pairwise = AGAT_PROT.out.all
             .toList()
             .map { list ->
                 def combos = []
@@ -135,6 +136,9 @@ workflow SYN_SW {
             .flatten()
             .buffer(size: 6)
             .filter { i1, g1, p1, i2, g2, p2 -> i1 != i2 }
-        ch_testing.view()
+
+        DIAMOND_PAIR(ch_pairwise)
+
+        MCSCANX_PLEX(DIAMOND_PAIR.out.result)
 
 }
