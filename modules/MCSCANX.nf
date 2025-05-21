@@ -1,5 +1,5 @@
 process MCSCANX {
-    label 'blast'
+    label 'mcscanx'
 	container 'quay.io/biocontainers/mcscanx:0.1--h9948957_0'
 
     input:
