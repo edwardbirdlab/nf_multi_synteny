@@ -121,10 +121,10 @@ workflow SYN_SW {
             .buffer(size: 3)
             .filter { id, f1, f2 -> f1 != f2 }
 
-        Running pairwise blasts
+        //Running pairwise blasts
         DIAMOND_ALL(pairwise_ch)
 
-        Collect all blasts
+        //Collect all blasts
         ch_concatenated_blast = DIAMOND_ALL.out.result
             .collectFile(name: 'all_blast_results.txt')
             .view { file -> "All BLAST results concatenated into: ${file.name}" }
