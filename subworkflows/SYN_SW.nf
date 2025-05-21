@@ -17,6 +17,8 @@ include { AGAT_LONGEST_PROT as AGAT_LONGEST_PROT } from '../modules/AGAT.nf'
 include { BUSCO_DB as BUSCO_DB } from '../modules/BUSCO.nf'
 include { BUSCO as BUSCO } from '../modules/BUSCO.nf'
 include { QUAST as QUAST } from '../modules/QUAST.nf'
+include { COMBINE_BED_DUP as COMBINE_BED_DUP } from '../modules/BIN_SCRIPTS.nf'
+include { MCSCANX_PLEX as MCSCANX_PLEX } from '../modules/MCSCANX.nf'
 
 workflow SYN_SW {
     take:
@@ -89,6 +91,18 @@ workflow SYN_SW {
 
         //Run McScanX
         MCSCANX(ch_concatenated_blast, COMBINE_BED.out.combo_bed)
+
+        //Run McScanX pairwise
+        //Create pairwise mix
+        ch_pairwise_bed = AGAT_GFF2BED.out.for_mcscanx.combine(AGAT_GFF2BED.out.for_mcscanx).filter { id1, g1, id2, g2 -> g1 != g2 }
+
+        //Combine pairwise beds
+        COMBINE_BED_DUP(ch_pairwise_bed)
+
+        //Mix in the full combined blast
+        ch_pairwise_mcscanx = COMBINE_BED_DUP.out.combo_bed.combine(ch_concatenated_blast)
+
+        MCSCANX_PLEX(ch_pairwise_mcscanx)
 
 
         //BUSCO
