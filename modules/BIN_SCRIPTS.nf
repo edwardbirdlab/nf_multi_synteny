@@ -30,7 +30,7 @@ process RENAME_CHR {
     script:
 
     """
-    generate_contig_map.sh ${fa} ${id}_contig_map.tsv ${id}
+    generate_contig_map.sh ${fa} ${id}_contig_map.tsv ${id}_
     rename_fasta_headers.sh ${id}_contig_map.tsv ${fa} ${id}_genome.fasta
     rename_gff3_contigs.sh ${id}_contig_map.tsv ${gff} ${id}_annot.gff3
     """
