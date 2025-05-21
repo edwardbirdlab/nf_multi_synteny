@@ -27,7 +27,7 @@ process MCSCANX {
 }
 
 process MCSCANX_PLEX {
-    label 'mcscanx'
+    label 'mcscanx_plex'
     container 'quay.io/biocontainers/mcscanx:0.1--h9948957_0'
 
     input:
