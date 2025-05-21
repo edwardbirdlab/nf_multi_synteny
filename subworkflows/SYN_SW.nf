@@ -20,6 +20,7 @@ include { QUAST as QUAST } from '../modules/QUAST.nf'
 include { COMBINE_BED_DUP as COMBINE_BED_DUP } from '../modules/BIN_SCRIPTS.nf'
 include { MCSCANX_PLEX as MCSCANX_PLEX } from '../modules/MCSCANX.nf'
 include { DIAMOND_PAIR as DIAMOND_PAIR } from '../modules/BLASTP.nf'
+include { AGAT_GFF2BED_PAIR as AGAT_GFF2BED_PAIR } from '../modules/AGAT.nf'
 
 workflow SYN_SW {
     take:
@@ -77,14 +78,14 @@ workflow SYN_SW {
         //DIAMOND_ALL(pairwise_ch)
 
         //Collect all blasts
-        ch_concatenated_blast = DIAMOND_ALL.out.result
-            .collectFile(name: 'all_blast_results.txt')
-            .view { file -> "All BLAST results concatenated into: ${file.name}" }
+        //ch_concatenated_blast = DIAMOND_ALL.out.result
+        //    .collectFile(name: 'all_blast_results.txt')
+        //    .view { file -> "All BLAST results concatenated into: ${file.name}" }
 
         //Combine GFFs into BED
 
         //GFF to BED
-        AGAT_GFF2BED(AGAT_STD.out.gff)
+        //AGAT_GFF2BED(AGAT_STD.out.gff)
 
         //BED Combine
         //COMBINE_BED(AGAT_GFF2BED.out.bed_only.collect())
@@ -139,6 +140,8 @@ workflow SYN_SW {
 
         DIAMOND_PAIR(ch_pairwise)
 
-        MCSCANX_PLEX(DIAMOND_PAIR.out.result)
+        AGAT_GFF2BED_PAIR(DIAMOND_PAIR.out.result)
+
+        MCSCANX_PLEX(AGAT_GFF2BED_PAIR.out.for_mcscanx)
 
 }

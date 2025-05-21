@@ -88,3 +88,25 @@ process AGAT_LONGEST_PROT {
 
     """
 }
+
+process AGAT_GFF2BED_PAIR {
+    label 'low'
+    container 'quay.io/biocontainers/agat:1.4.2--pl5321hdfd78af_0'
+
+    input:
+        tuple val(id), file(gff1), file(gff2), file(blast)
+
+    output:
+       tuple val(id), file(${id}_combined_format.bed), file(blast), emit: for_mcscanx
+
+
+    script:
+
+    """
+    agat_convert_sp_gff2bed.pl --gff ${gff1} --out gff1_annot.bed
+    agat_convert_sp_gff2bed.pl --gff ${gff2} --out gff2_annot.bed
+
+    cat gff1_annot.bed gff2_annot.bed > ${id}_combined.bed
+    sort_and_filter_bed.sh ${id}_combined.bed ${id}_combined_format.bed
+    """
+}

@@ -107,7 +107,7 @@ process DIAMOND_PAIR {
         tuple val(id1), file(gff1), file(fa1), val(id2), file(gff2), file(fa2)
 
     output:
-       tuple val(sample_combo), path("${sample_combo}_combined_format.bed"), path("${sample_combo}.blast"), emit: result
+       tuple val(sample_combo), path(gff1), path(gff2), path("${sample_combo}.blast"), emit: result
 
 
     script:
