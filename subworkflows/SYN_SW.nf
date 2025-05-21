@@ -95,10 +95,10 @@ workflow SYN_SW {
         ch_diamond_all = ch_diamond_query.combine(ch_diamond_db)
 
         //Running Diamond
-        DIAMOND_OF(ch_diamond_all)
+        //DIAMOND_OF(ch_diamond_all)
 
         //Running orthofinder
-        ORTHOFINDER_BG_RERUN(ORTHOFINDER_BG.out.output, DIAMOND_OF.out.result.collect())
+        //ORTHOFINDER_BG_RERUN(ORTHOFINDER_BG.out.output, DIAMOND_OF.out.result.collect())
 
 
         //Blast proteins
