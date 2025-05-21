@@ -86,23 +86,23 @@ workflow SYN_SW {
         AGAT_GFF2BED(AGAT_STD.out.gff)
 
         //BED Combine
-        COMBINE_BED(AGAT_GFF2BED.out.bed_only.collect())
+        //COMBINE_BED(AGAT_GFF2BED.out.bed_only.collect())
 
 
         //Run McScanX
-        MCSCANX(ch_concatenated_blast, COMBINE_BED.out.combo_bed)
+        //MCSCANX(ch_concatenated_blast, COMBINE_BED.out.combo_bed)
 
         //Run McScanX pairwise
         //Create pairwise mix
-        ch_pairwise_bed = AGAT_GFF2BED.out.for_mcscanx.combine(AGAT_GFF2BED.out.for_mcscanx).filter { id1, g1, id2, g2 -> g1 != g2 }
+        //ch_pairwise_bed = AGAT_GFF2BED.out.for_mcscanx.combine(AGAT_GFF2BED.out.for_mcscanx).filter { id1, g1, id2, g2 -> g1 != g2 }
 
         //Combine pairwise beds
-        COMBINE_BED_DUP(ch_pairwise_bed)
+        //COMBINE_BED_DUP(ch_pairwise_bed)
 
         //Mix in the full combined blast
-        ch_pairwise_mcscanx = COMBINE_BED_DUP.out.combo_bed.combine(ch_concatenated_blast)
+        //ch_pairwise_mcscanx = COMBINE_BED_DUP.out.combo_bed.combine(ch_concatenated_blast)
 
-        MCSCANX_PLEX(ch_pairwise_mcscanx)
+        //MCSCANX_PLEX(ch_pairwise_mcscanx)
 
 
         //BUSCO
@@ -118,5 +118,23 @@ workflow SYN_SW {
 
         //Running Quast
         //QUAST(input)
+
+
+        //testing new channel scheme
+        ch_testing = AGAT_PROT.out.all
+            .toList()
+            .map { list ->
+                def combos = []
+                for (int i = 0; i < list.size(); i++) {
+                    for (int j = i + 1; j < list.size(); j++) {
+                        combos << [list[i], list[j]]
+                    }
+                }
+                return combos
+            }
+            .flatten()
+            .buffer(size: 6)
+            .filter { id, g1, p2, i2, g2, p2 -> i1 != i2 }
+        ch_testing.view()
 
 }

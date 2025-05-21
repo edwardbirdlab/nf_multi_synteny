@@ -26,6 +26,7 @@ process AGAT_PROT {
     output:
        tuple val(id), path("${id}_proteins.fasta"), emit: prots
        path("${id}_proteins.fasta"), emit: prots_only
+       tuple val(id), path(gff), path("${id}_proteins.fasta"), emit: all 
 
 
     script:
