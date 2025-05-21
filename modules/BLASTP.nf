@@ -108,6 +108,8 @@ process DIAMOND_PAIR {
 
     output:
        tuple val(sample_combo), path(gff1), path(gff2), path("${sample_combo}.blast"), emit: result
+       tuple val(id1), path("${id1}.blast"), emit: result_sp1
+       tuple val(id2), path("${id2}.blast"), emit: result_sp2
 
 
     script:
