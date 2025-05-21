@@ -104,7 +104,7 @@ workflow SYN_SW {
         //Blast proteins
 
         //Create pariwise protein set
-        protein_ch = AGAT_PROT.out.prots_only
+        protein_ch = AGAT_LONGEST_PROT.out.prots_only
 
         pairwise_ch = protein_ch
             .toList()
