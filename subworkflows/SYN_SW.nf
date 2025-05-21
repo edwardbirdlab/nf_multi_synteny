@@ -134,7 +134,7 @@ workflow SYN_SW {
             }
             .flatten()
             .buffer(size: 6)
-            .filter { id, g1, p2, i2, g2, p2 -> i1 != i2 }
+            .filter { i1, g1, p1, i2, g2, p2 -> i1 != i2 }
         ch_testing.view()
 
 }
