@@ -72,6 +72,7 @@ process AGAT_LONGEST_PROT {
     output:
        tuple val(id), path("${id}_longest_proteins.fasta"), emit: prots
        path("${id}_longest_proteins.fasta"), emit: prots_only
+       tuple val(id), path(gff), path("${id}_longest_proteins.fasta"), emit: all 
 
 
     script:

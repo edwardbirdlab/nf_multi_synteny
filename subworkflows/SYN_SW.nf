@@ -49,7 +49,7 @@ workflow SYN_SW {
         AGAT_STD(RENAME_CHR.out.remap)
 
         //GFFRead Extract Proteins
-        AGAT_PROT(AGAT_STD.out.gff)
+        AGAT_LONGEST_PROT(AGAT_STD.out.gff)
 
 
 
@@ -123,7 +123,7 @@ workflow SYN_SW {
 
 
         //testing new channel scheme
-        ch_pairwise = AGAT_PROT.out.all
+        ch_pairwise = AGAT_LONGEST_PROT.out.all
             .toList()
             .map { list ->
                 def combos = []
