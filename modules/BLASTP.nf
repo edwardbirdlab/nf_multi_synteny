@@ -138,7 +138,7 @@ process DIAMOND_PAIR {
       -o ${id2}_vs_${id1}.blast \
       --threads ${task.cpus}
 
-    cat ${id1}.blast ${id2}.blast > ${sample_combo}.blast
+    cat ${id1}_vs_${id2}.blast ${id2}_vs_${id1}.blast > ${sample_combo}.blast
 
     cat ${gff1} ${gff2} > ${sample_combo}_combined.bed
     sort_and_filter_bed.sh ${sample_combo}_combined.bed ${sample_combo}_combined_format.bed
