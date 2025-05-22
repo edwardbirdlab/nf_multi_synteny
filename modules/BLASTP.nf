@@ -108,8 +108,8 @@ process DIAMOND_PAIR {
 
     output:
        tuple val(sample_combo), path(gff1), path(gff2), path("${sample_combo}.blast"), emit: result
-       tuple val(id1), path("${id1}.blast"), emit: result_sp1
-       tuple val(id2), path("${id2}.blast"), emit: result_sp2
+       tuple val(id1), path("${id1}_vs_${id2}.blast"), emit: result_sp1
+       tuple val(id2), path("${id2}_vs_${id1}.blast"), emit: result_sp2
 
 
     script:
@@ -126,7 +126,7 @@ process DIAMOND_PAIR {
       -e ${params.diamond_e_value} \
       --max-target-seqs 5 \
       --outfmt 6 \
-      -o ${id1}.blast \
+      -o ${id1}_vs_${id2}.blast \
       --threads ${task.cpus}
 
     diamond blastp \
@@ -135,7 +135,7 @@ process DIAMOND_PAIR {
       -e ${params.diamond_e_value} \
       --max-target-seqs 5 \
       --outfmt 6 \
-      -o ${id2}.blast \
+      -o ${id2}_vs_${id1}.blast \
       --threads ${task.cpus}
 
     cat ${id1}.blast ${id2}.blast > ${sample_combo}.blast
