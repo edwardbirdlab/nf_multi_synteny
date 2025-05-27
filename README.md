@@ -1,2 +1,2 @@
 # Synteny
-A pipline to prep genomes and run MCScanX
+A pipline to prep genomes and run MCScanX & OrthoFinder3
