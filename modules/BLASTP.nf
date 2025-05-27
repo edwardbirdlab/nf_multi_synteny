@@ -99,6 +99,7 @@ process DIAMOND_ALL {
     """
 }
 
+
 process DIAMOND_PAIR {
     label 'blast'
     container 'buchfink/diamond:version2.1.11'
@@ -142,5 +143,49 @@ process DIAMOND_PAIR {
 
     cat ${gff1} ${gff2} > ${sample_combo}_combined.bed
     sort_and_filter_bed.sh ${sample_combo}_combined.bed ${sample_combo}_combined_format.bed
+    "
+
+process DIAMOND_OF_DB {
+    label 'blast'
+    container 'buchfink/diamond:version2.1.11'
+
+    input:
+        file(fa)
+
+    output:
+       path("*.dmnd"), emit: db
+
+
+    script:
+
+
+    """
+    BASENAME=\$(basename ${fa} .fa)
+    
+    diamond makedb --in ${fa} -d diamondDB\${BASENAME}
+    """
+}
+
+process DIAMOND_OF {
+    label 'blast'
+    container 'buchfink/diamond:version2.1.11'
+
+    input:
+        tuple file(fa), file(db)
+
+    output:
+       path("*.txt.gz"), emit: result
+
+
+    script:
+
+    """
+    Q_ID=\$(basename ${fa} .fa | grep -o '[0-9]\\+')
+    DB_ID=\$(basename ${db} .dmnd | grep -o '[0-9]\\+')
+    DB_NAME=\$(basename ${db} .dmnd)
+
+    OUTFILE="Blast\${Q_ID}_\${DB_ID}.txt"
+    
+    diamond blastp -d \$DB_NAME -q ${fa} -o \$OUTFILE --more-sensitive -p ${task.cpus} --quiet -e 0.001 --compress 1
     """
 }
