@@ -25,6 +25,9 @@ include { COMBINE_BLAST as COMBINE_BLAST } from '../modules/BIN_SCRIPTS.nf'
 include { BLAST_RENAME as BLAST_RENAME } from '../modules/BIN_SCRIPTS.nf'
 include { AGAT_STATS as AGAT_STATS } from '../modules/AGAT.nf'
 include { COMBINE_BED_DUP as COMBINE_BED_DUP } from '../modules/BIN_SCRIPTS.nf'
+include { MCSCANX_PLEX as MCSCANX_PLEX } from '../modules/MCSCANX.nf'
+include { DIAMOND_PAIR as DIAMOND_PAIR } from '../modules/BLASTP.nf'
+include { AGAT_GFF2BED_PAIR as AGAT_GFF2BED_PAIR } from '../modules/AGAT.nf'
 
 
 workflow SYN_SW {
@@ -57,7 +60,7 @@ workflow SYN_SW {
         AGAT_STATS(AGAT_STD.out.gff)
 
         //GFFRead Extract Proteins
-        AGAT_PROT(AGAT_STD.out.gff)
+        AGAT_LONGEST_PROT(AGAT_STD.out.gff)
 
         //Combine GFFs into BED
 
@@ -95,59 +98,32 @@ workflow SYN_SW {
         ch_diamond_all = ch_diamond_query.combine(ch_diamond_db)
 
         //Running Diamond
-        //DIAMOND_OF(ch_diamond_all)
+        DIAMOND_OF(ch_diamond_all)
 
         //Running orthofinder
-        //ORTHOFINDER_BG_RERUN(ORTHOFINDER_BG.out.output, DIAMOND_OF.out.result.collect())
+        ORTHOFINDER_BG_RERUN(ORTHOFINDER_BG.out.output, DIAMOND_OF.out.result.collect()
 
 
-        //Blast proteins
-
-        //Create pariwise protein set
-        protein_ch = AGAT_LONGEST_PROT.out.prots_only
-
-        pairwise_ch = protein_ch
+        //Making new channel format for McScanX processing
+        ch_pairwise = AGAT_LONGEST_PROT.out.all
             .toList()
-            .map { files ->
-                def labeled = files.indexed().collect { idx, f -> tuple("S${idx+1}", f) }
-                labeled.collectMany { t1 ->
-                    labeled.collect { t2 ->
-                        def label = "${t1[0]}_vs_${t2[0]}"
-                        tuple(label, t1[1], t2[1])
+            .map { list ->
+                def combos = []
+                for (int i = 0; i < list.size(); i++) {
+                    for (int j = i + 1; j < list.size(); j++) {
+                        combos << [list[i], list[j]]
                     }
                 }
+                return combos
             }
             .flatten()
-            .buffer(size: 3)
-            .filter { id, f1, f2 -> f1 != f2 }
+            .buffer(size: 6)
+            .filter { i1, g1, p1, i2, g2, p2 -> i1 != i2 }
 
-        //Running pairwise blasts
-        DIAMOND_ALL(pairwise_ch)
+        DIAMOND_PAIR(ch_pairwise)
 
-        //Collect all blasts
-        ch_concatenated_blast = DIAMOND_ALL.out.result
-            .collectFile(name: 'all_blast_results.txt')
-            .view { file -> "All BLAST results concatenated into: ${file.name}" }
+        AGAT_GFF2BED_PAIR(DIAMOND_PAIR.out.result)
 
-
-        //Rename Bast
-        //ch_blast_rename = DIAMOND_OF.out.result.combine(ORTHOFINDER_BG.out.seqids)
-        //BLAST_RENAME(ch_blast_rename)
-
-        //Combine Blast
-        //COMBINE_BLAST(BLAST_RENAME.out.blast.collect())
-
-        //Run McScanX
-        //Create pairwise mix
-        ch_pairwise_bed = AGAT_GFF2BED.out.for_mcscanx.combine(AGAT_GFF2BED.out.for_mcscanx).filter { id1, g1, id2, g2 -> g1 != g2 }
-        ch_pairwise_bed.view()
-
-        //Combine pairwise beds
-        COMBINE_BED_DUP(ch_pairwise_bed)
-
-        //Mix in the full combined blast
-        ch_pairwise_mcscanx = COMBINE_BED_DUP.out.combo_bed.combine(ch_concatenated_blast)
-
-        MCSCANX(ch_pairwise_mcscanx)
+        MCSCANX_PLEX(AGAT_GFF2BED_PAIR.out.for_mcscanx)
 
 }

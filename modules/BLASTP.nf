@@ -99,6 +99,52 @@ process DIAMOND_ALL {
     """
 }
 
+
+process DIAMOND_PAIR {
+    label 'blast'
+    container 'buchfink/diamond:version2.1.11'
+
+    input:
+        tuple val(id1), file(gff1), file(fa1), val(id2), file(gff2), file(fa2)
+
+    output:
+       tuple val(sample_combo), path(gff1), path(gff2), path("${sample_combo}.blast"), emit: result
+       tuple val(id1), path("${id1}_vs_${id2}.blast"), emit: result_sp1
+       tuple val(id2), path("${id2}_vs_${id1}.blast"), emit: result_sp2
+
+
+    script:
+
+    sample_combo = "${id1}_${id2}"
+
+    """
+    diamond makedb --in ${fa1} -d prots_db_1
+    diamond makedb --in ${fa2} -d prots_db_2
+
+    diamond blastp \
+      -q ${fa1} \
+      -d prots_db_2 \
+      -e ${params.diamond_e_value} \
+      --max-target-seqs 5 \
+      --outfmt 6 \
+      -o ${id1}_vs_${id2}.blast \
+      --threads ${task.cpus}
+
+    diamond blastp \
+      -q ${fa2} \
+      -d prots_db_1 \
+      -e ${params.diamond_e_value} \
+      --max-target-seqs 5 \
+      --outfmt 6 \
+      -o ${id2}_vs_${id1}.blast \
+      --threads ${task.cpus}
+
+    cat ${id1}_vs_${id2}.blast ${id2}_vs_${id1}.blast > ${sample_combo}.blast
+
+    cat ${gff1} ${gff2} > ${sample_combo}_combined.bed
+    sort_and_filter_bed.sh ${sample_combo}_combined.bed ${sample_combo}_combined_format.bed
+    "
+
 process DIAMOND_OF_DB {
     label 'blast'
     container 'buchfink/diamond:version2.1.11'
@@ -111,6 +157,7 @@ process DIAMOND_OF_DB {
 
 
     script:
+
 
     """
     BASENAME=\$(basename ${fa} .fa)
