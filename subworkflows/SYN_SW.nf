@@ -1,10 +1,3 @@
-/*
-Subworkflow for assembly QC using Kraken2, minimap2, and blobtools2
-Requries set params:
-
-
-*/
-
 include { DIAMOND_ALL as DIAMOND_ALL } from '../modules/BLASTP.nf'
 include { FASTA_FILT as FASTA_FILT } from '../modules/BIN_SCRIPTS.nf'
 include { RENAME_CHR as RENAME_CHR } from '../modules/BIN_SCRIPTS.nf'
