@@ -74,3 +74,57 @@ process COMBINE_BED_DUP {
     sort_and_filter_bed.sh ${sample_combo}_combined.bed ${sample_combo}_combined_format.bed
     """
 }
+
+process COMBINE_BLAST {
+    label 'verylow'
+    container 'ubuntu:22.04'
+
+    input:
+        file(blasts)
+
+    output:
+       path("combined_input.blast"), emit: combo
+
+
+    script:
+
+    """
+    cat *.blast > combined_input.blast
+    """
+}
+process PCG_COUNT {
+    label 'verylow'
+    container 'ubuntu:22.04'
+
+    input:
+        tuple val(id), file(prots)
+
+    output:
+       path("${id}_prot_count.txt"), emit: counts
+
+
+    script:
+
+    """
+    grep -c '^>' ${prots} > ${id}_prot_count.txt
+    """
+}
+process BLAST_RENAME {
+    label 'verylow'
+    container 'ubuntu:22.04'
+
+    input:
+        tuple file(blast), file(mapping)
+
+    output:
+       path("*.blast"), emit: blast
+
+
+    script:
+
+    """
+    prefix=\$(basename ${blast} .txt.gz)
+    gunzip -c ${blast} > \${prefix}.txt
+    replace_ids.sh ${mapping} \${prefix}.txt \${prefix}.blast
+    """
+}

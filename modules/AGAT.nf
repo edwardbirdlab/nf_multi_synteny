@@ -7,12 +7,19 @@ process AGAT_STD {
 
     output:
 	   tuple val(id), path(fa), path("${id}_annot_std.gff3"), emit: gff
+       path("versions.yml"), emit: versions
 
 
     script:
 
     """
     agat_convert_sp_gxf2gxf.pl --gff ${gff} --output ${id}_annot_std.gff3
+
+        
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        agat: \$(agat_sp_statistics.pl --help | sed -n 's/.*(AGAT) - Version: \\(.*\\) .*/\\1/p')
+    END_VERSIONS
     """
 }
 
@@ -27,7 +34,7 @@ process AGAT_PROT {
        tuple val(id), path("${id}_proteins.fasta"), emit: prots
        path("${id}_proteins.fasta"), emit: prots_only
        tuple val(id), path(gff), path("${id}_proteins.fasta"), emit: all 
-
+       path("versions.yml"), emit: versions
 
     script:
 
@@ -39,6 +46,11 @@ process AGAT_PROT {
       --protein \
       --output ${id}_proteins.fasta
 
+      
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        agat: \$(agat_sp_statistics.pl --help | sed -n 's/.*(AGAT) - Version: \\(.*\\) .*/\\1/p')
+    END_VERSIONS
     """
 }
 
@@ -53,12 +65,18 @@ process AGAT_GFF2BED {
        tuple val(id), path(fa), path("${id}_annot.bed"), emit: bed
        path("${id}_annot.bed"), emit: bed_only
        tuple val(id), path("${id}_annot.bed"), emit: for_mcscanx
-
+       path("versions.yml"), emit: versions
 
     script:
 
     """
     agat_convert_sp_gff2bed.pl --gff ${gff} --out ${id}_annot.bed
+
+      
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        agat: \$(agat_sp_statistics.pl --help | sed -n 's/.*(AGAT) - Version: \\(.*\\) .*/\\1/p')
+    END_VERSIONS
     """
 }
 
@@ -73,7 +91,7 @@ process AGAT_LONGEST_PROT {
        tuple val(id), path("${id}_longest_proteins.fasta"), emit: prots
        path("${id}_longest_proteins.fasta"), emit: prots_only
        tuple val(id), path(gff), path("${id}_longest_proteins.fasta"), emit: all 
-
+       path("versions.yml"), emit: versions
 
     script:
 
@@ -87,6 +105,38 @@ process AGAT_LONGEST_PROT {
       --protein \
       --output ${id}_longest_proteins.fasta
 
+      
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        agat: \$(agat_sp_statistics.pl --help | sed -n 's/.*(AGAT) - Version: \\(.*\\) .*/\\1/p')
+    END_VERSIONS
+    """
+}
+
+process AGAT_STATS {
+    label 'low'
+    container 'quay.io/biocontainers/agat:1.4.2--pl5321hdfd78af_0'
+
+    input:
+        tuple val(id), file(fa), file(gff)
+
+    output:
+       tuple val(id), path("${id}_agat_stats.fasta"), emit: stats
+       path("versions.yml"), emit: versions
+
+    script:
+
+    """
+    agat_sp_statistics.pl \
+      --gff ${gff} \
+      --f ${fa} \
+      --output ${id}_agat_stats.fasta
+
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        agat: \$(agat_sp_statistics.pl --help | sed -n 's/.*(AGAT) - Version: \\(.*\\) .*/\\1/p')
+    END_VERSIONS
     """
 }
 

@@ -111,9 +111,7 @@ process DIAMOND_PAIR {
        tuple val(id1), path("${id1}_vs_${id2}.blast"), emit: result_sp1
        tuple val(id2), path("${id2}_vs_${id1}.blast"), emit: result_sp2
 
-
     script:
-
     sample_combo = "${id1}_${id2}"
 
     """
@@ -144,3 +142,51 @@ process DIAMOND_PAIR {
     sort_and_filter_bed.sh ${sample_combo}_combined.bed ${sample_combo}_combined_format.bed
     """
 }
+
+process DIAMOND_OF_DB {
+    label 'blast'
+    container 'buchfink/diamond:version2.1.11'
+
+    input:
+        file(fa)
+
+    output:
+       path("*.dmnd"), emit: db
+
+    script:
+    """
+    BASENAME=\$(basename ${fa} .fa)
+    diamond makedb --in ${fa} -d diamondDB\${BASENAME}
+    """
+}
+
+process DIAMOND_OF {
+    label 'blast'
+    container 'buchfink/diamond:version2.1.11'
+
+    input:
+        tuple file(fa), file(db)
+
+    output:
+       path("*.txt.gz"), emit: result
+
+    script:
+    """
+    Q_ID=\$(basename ${fa} .fa | grep -o '[0-9]\\+')
+    DB_ID=\$(basename ${db} .dmnd | grep -o '[0-9]\\+')
+    DB_NAME=\$(basename ${db} .dmnd)
+
+    OUTFILE="Blast\${Q_ID}_\${DB_ID}.txt"
+
+    diamond blastp \
+      -d \$DB_NAME \
+      -q ${fa} \
+      -o \$OUTFILE \
+      --more-sensitive \
+      -p ${task.cpus} \
+      --quiet \
+      -e 0.001 \
+      --compress 1
+    """
+}
+

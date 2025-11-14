@@ -21,6 +21,15 @@ include { COMBINE_BED_DUP as COMBINE_BED_DUP } from '../modules/BIN_SCRIPTS.nf'
 include { MCSCANX_PLEX as MCSCANX_PLEX } from '../modules/MCSCANX.nf'
 include { DIAMOND_PAIR as DIAMOND_PAIR } from '../modules/BLASTP.nf'
 include { AGAT_GFF2BED_PAIR as AGAT_GFF2BED_PAIR } from '../modules/AGAT.nf'
+include { ORTHOFINDER_BG as ORTHOFINDER_BG } from '../modules/ORTHOFINDER.nf'
+include { DIAMOND_OF_DB as DIAMOND_OF_DB } from '../modules/BLASTP.nf'
+include { DIAMOND_OF as DIAMOND_OF } from '../modules/BLASTP.nf'
+include { ORTHOFINDER_BG_RERUN as ORTHOFINDER_BG_RERUN } from '../modules/ORTHOFINDER.nf'
+include { COMBINE_BLAST as COMBINE_BLAST } from '../modules/BIN_SCRIPTS.nf'
+include { BLAST_RENAME as BLAST_RENAME } from '../modules/BIN_SCRIPTS.nf'
+include { AGAT_STATS as AGAT_STATS } from '../modules/AGAT.nf'
+include { COMBINE_BED_DUP as COMBINE_BED_DUP } from '../modules/BIN_SCRIPTS.nf'
+
 
 workflow SYN_SW {
     take:
@@ -34,11 +43,11 @@ workflow SYN_SW {
 
 
         //Filter small contigs
-        FASTA_FILT(input)
+        // FASTA_FILT(input)
 
 
         //Rename fasta and gff
-        RENAME_CHR(FASTA_FILT.out.filt_fasta)
+        RENAME_CHR(input)
 
 
 
@@ -48,10 +57,52 @@ workflow SYN_SW {
         //AGAT GFF Standard
         AGAT_STD(RENAME_CHR.out.remap)
 
+        //AGAT get stats
+        AGAT_STATS(AGAT_STD.out.gff)
+
         //GFFRead Extract Proteins
         AGAT_LONGEST_PROT(AGAT_STD.out.gff)
 
+        //Combine GFFs into BED
 
+        //GFF to BED
+        AGAT_GFF2BED(AGAT_STD.out.gff)
+
+        //BED Combine
+        COMBINE_BED(AGAT_GFF2BED.out.bed_only.collect())
+
+
+        //BUSCO
+
+        //Get longest isoform prot seqs
+        AGAT_LONGEST_PROT(AGAT_STD.out.gff)
+
+        //Get Busco DB
+        BUSCO_DB()
+
+        //Run Busco
+        BUSCO(AGAT_LONGEST_PROT.out.prots,BUSCO_DB.out.busco_db)
+
+        //Running Quast
+        QUAST(input)
+
+        //Running Orthofinder3
+        ORTHOFINDER_BG(AGAT_LONGEST_PROT.out.prots_only.collect())
+
+        //making diamond dbs
+        DIAMOND_OF_DB(ORTHOFINDER_BG.out.fasta.flatten())
+
+        //Channel For Blasts
+        ch_diamond_db = DIAMOND_OF_DB.out.db
+        ch_diamond_query = ORTHOFINDER_BG.out.fasta.flatten()
+
+        ch_diamond_all = ch_diamond_query.combine(ch_diamond_db)
+
+        //Running Diamond
+        //DIAMOND_OF(ch_diamond_all)
+
+        //Running orthofinder
+        //ORTHOFINDER_BG_RERUN(ORTHOFINDER_BG.out.output, DIAMOND_OF.out.result.collect())
 
 
         //Blast proteins
@@ -82,14 +133,14 @@ workflow SYN_SW {
         //    .collectFile(name: 'all_blast_results.txt')
         //    .view { file -> "All BLAST results concatenated into: ${file.name}" }
 
-        //Combine GFFs into BED
-
         //GFF to BED
         //AGAT_GFF2BED(AGAT_STD.out.gff)
 
         //BED Combine
         //COMBINE_BED(AGAT_GFF2BED.out.bed_only.collect())
 
+        //Combine Blast
+        //COMBINE_BLAST(BLAST_RENAME.out.blast.collect())
 
         //Run McScanX
         //MCSCANX(ch_concatenated_blast, COMBINE_BED.out.combo_bed)
@@ -106,20 +157,13 @@ workflow SYN_SW {
 
         //MCSCANX_PLEX(ch_pairwise_mcscanx)
 
+        //Combine pairwise beds
+        COMBINE_BED_DUP(ch_pairwise_bed)
 
-        //BUSCO
+        //Mix in the full combined blast
+        ch_pairwise_mcscanx = COMBINE_BED_DUP.out.combo_bed.combine(ch_concatenated_blast)
 
-        //Get longest isoform prot seqs
-        //AGAT_LONGEST_PROT(AGAT_STD.out.gff)
-
-        //Get Busco DB
-        //BUSCO_DB()
-
-        //Run Busco
-        //BUSCO(AGAT_LONGEST_PROT.out.prots,BUSCO_DB.out.busco_db)
-
-        //Running Quast
-        //QUAST(input)
+        MCSCANX(ch_pairwise_mcscanx)
 
 
         //testing new channel scheme
