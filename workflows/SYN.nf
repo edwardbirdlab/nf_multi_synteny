@@ -1,9 +1,3 @@
-/*
-~~~~~~~~~~~~~~~~~~~~~~
-Importing subworkflows
-~~~~~~~~~~~~~~~~~~~~~~
-*/
-
 include { SYN_SW as SYN_SW } from '../subworkflows/SYN_SW.nf'
 
 
