@@ -72,11 +72,6 @@ workflow SYN_SW {
         COMBINE_BED(AGAT_GFF2BED.out.bed_only.collect())
 
 
-        //BUSCO
-
-        //Get longest isoform prot seqs
-        AGAT_LONGEST_PROT(AGAT_STD.out.gff)
-
         //Get Busco DB
         BUSCO_DB()
 
