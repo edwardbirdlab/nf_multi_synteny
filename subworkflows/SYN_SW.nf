@@ -76,7 +76,7 @@ workflow SYN_SW {
         BUSCO_DB()
 
         //Run Busco
-        BUSCO(AGAT_LONGEST_PROT.out.prots,BUSCO_DB.out.busco_db)
+        //BUSCO(AGAT_LONGEST_PROT.out.prots,BUSCO_DB.out.busco_db)
 
         //Running Quast
         QUAST(input)
@@ -97,7 +97,7 @@ workflow SYN_SW {
         //DIAMOND_OF(ch_diamond_all)
 
         //Running orthofinder
-        //ORTHOFINDER_BG_RERUN(ORTHOFINDER_BG.out.output, DIAMOND_OF.out.result.collect())
+        ORTHOFINDER_BG_RERUN(ORTHOFINDER_BG.out.output, DIAMOND_OF.out.result.collect())
 
 
         //Blast proteins
