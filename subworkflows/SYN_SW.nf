@@ -28,7 +28,7 @@ include { ORTHOFINDER_BG_RERUN as ORTHOFINDER_BG_RERUN } from '../modules/ORTHOF
 include { COMBINE_BLAST as COMBINE_BLAST } from '../modules/BIN_SCRIPTS.nf'
 include { BLAST_RENAME as BLAST_RENAME } from '../modules/BIN_SCRIPTS.nf'
 include { AGAT_STATS as AGAT_STATS } from '../modules/AGAT.nf'
-include { COMBINE_BED_DUP as COMBINE_BED_DUP } from '../modules/BIN_SCRIPTS.nf'
+
 
 
 workflow SYN_SW {
