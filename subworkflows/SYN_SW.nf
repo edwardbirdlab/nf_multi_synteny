@@ -142,7 +142,7 @@ workflow SYN_SW {
 
         //Run McScanX pairwise
         //Create pairwise mix
-        //ch_pairwise_bed = AGAT_GFF2BED.out.for_mcscanx.combine(AGAT_GFF2BED.out.for_mcscanx).filter { id1, g1, id2, g2 -> g1 != g2 }
+        ch_pairwise_bed = AGAT_GFF2BED.out.for_mcscanx.combine(AGAT_GFF2BED.out.for_mcscanx).filter { id1, g1, id2, g2 -> g1 != g2 }
 
         //Combine pairwise beds
         //COMBINE_BED_DUP(ch_pairwise_bed)
@@ -153,12 +153,12 @@ workflow SYN_SW {
         //MCSCANX_PLEX(ch_pairwise_mcscanx)
 
         //Combine pairwise beds
-        COMBINE_BED_DUP(ch_pairwise_bed)
+        //COMBINE_BED_DUP(ch_pairwise_bed)
 
         //Mix in the full combined blast
-        ch_pairwise_mcscanx = COMBINE_BED_DUP.out.combo_bed.combine(ch_concatenated_blast)
+        //ch_pairwise_mcscanx = COMBINE_BED_DUP.out.combo_bed.combine(ch_concatenated_blast)
 
-        MCSCANX(ch_pairwise_mcscanx)
+        //MCSCANX(ch_pairwise_mcscanx)
 
 
         //testing new channel scheme
